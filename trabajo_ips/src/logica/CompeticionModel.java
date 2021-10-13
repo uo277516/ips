@@ -57,10 +57,10 @@ public class CompeticionModel
             c.close();
         }
 
-//        for (AtletaDto atletaDto : listaPedidos) {
-//			System.out.println(atletaDto.getDni() + " " + atletaDto.getF_nac()
-//			);
-//		}
+        for (CompeticionDto atletaDto : listaCompeticiones) {
+			System.out.println(atletaDto
+			);
+		}
         return listaCompeticiones;
 	}
 	
