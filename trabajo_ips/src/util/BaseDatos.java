@@ -7,7 +7,7 @@ import java.sql.Statement;
 
 public class BaseDatos {
 
-//uhkawdsfdf
+//uhkawdsfdfd
 	private static String DRIVER = "org.hsqldb.jdbcDriver";
 	private static String URL = "jdbc:hsqldb:hsql://localhost";
 	private static String USER = "sa";
