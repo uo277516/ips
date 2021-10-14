@@ -6,7 +6,7 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/uo276922/Desktop/IPS/clase/carworkshop_database_HSQLDB/lib/hsqldb.jar">
+	<classpathentry kind="lib" path="C:/Users/joser/Desktop/ING.INFO/TERCERO/1CUATRI/IPS/Practicas/clase/carworkshop_database_HSQLDB/lib/hsqldb.jar">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>

@@ -15,7 +15,6 @@ public class InscripcionModel
 	
 public static String sql1 = "select * from inscripcion";
 public static String sql2 = "select * from inscripcion where inscripcion.email=?";
-
 	
 	public List<InscripcionDto> getInscripciones() throws SQLException
 	{
