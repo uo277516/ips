@@ -12,7 +12,7 @@ public class Main {
 	{
 		new CompeticionModel().getCompeticionesArray();
 		new InscripcionModel().getInscripciones();
-		new AtletaModel().getAtletas();
+		new AtletaModel().getAtletas();	
 		System.out.println();
 		new AtletaModel().atletaAlredyRegistred("natalia@email.com", "Cross de Tineo");
 		System.out.println(new InscripcionModel().findAtletaEmail("jose@email.com"));
