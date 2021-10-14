@@ -157,8 +157,10 @@ public class VentanaInscripción extends JFrame {
 	protected void inscribirParticipante() {
 		System.out.println(txtEmail.getText());
 		System.out.println(cSeleccionada.getId());
-
-		ins.agregarInscripcion(txtEmail.getText(),cSeleccionada.getId());
+		float n = 10.0f+cSeleccionada.getCuota();
+		ins.agregarInscripcion(txtEmail.getText(),cSeleccionada.getId(),n,cambiarFormatoFecha());
+		
+		
 	}
 
 	protected boolean haySuficientesPlazas() {
@@ -195,12 +197,13 @@ public class VentanaInscripción extends JFrame {
 	 */
 	private String getInformacion() {
 		String s = "";
+		float n = 10.0f+cSeleccionada.getCuota();
 		AtletaDto nombre = ins.findAtletaEmail(txtEmail.getText()); 
 		return s+="Nombre del atleta: " + nombre.getNombre() + "\n" +
 			"Competición: " + cSeleccionada.getNombre() + "\n" +
 			"Categoría: " + "esto lo hace tania:)" + "\n" +
 			"Fecha de inscripción: " + cambiarFormatoFecha() + "\n" +
-			"Cantidad a abonar: " + cSeleccionada.getCuota();
+			"Cantidad a abonar: " + n  +" euros (cuota+gastos adicionales)";
 	}
 	
 	private String cambiarFormatoFecha() {
@@ -225,6 +228,7 @@ public class VentanaInscripción extends JFrame {
 	private JTextArea getTextArea() {
 		if (textArea == null) {
 			textArea = new JTextArea();
+			textArea.setFont(new Font("Tahoma", Font.PLAIN, 13));
 			textArea.setBounds(20, 206, 404, 139);
 		}
 		return textArea;

@@ -121,6 +121,7 @@ public class DtoAssembler {
 		String[] fInicio = fechaInicio.split("/");
 		for (int i = 0; i < fechaAcomparar.length; i++) {
 			System.out.println(fechaAcomparar[i]);
+			System.out.println(Integer.parseInt(fechaFin[0]));
 		}
 		if(Integer.parseInt(fechaFin[2]) < Integer.parseInt(fechaAcomparar[2]) || Integer.parseInt(fInicio[2]) > Integer.parseInt(fechaAcomparar[2])) {
 			return false;

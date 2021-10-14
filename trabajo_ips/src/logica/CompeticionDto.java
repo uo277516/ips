@@ -76,8 +76,8 @@ public class CompeticionDto {
 	
 	public String toString()
 	{
-		return this.nombre + " - " + this.f_comp + " - " +this.tipo+" - "+ this.distancia + "km" +" - "+ this.cuota+ " - "+ this.f_fin+ " - " +
-					this.num_plazas;
+		return this.nombre + " - " + this.f_comp + " - " +this.tipo+" - "+ this.distancia +" - "+ this.cuota+ "e - "+ this.f_fin+ " - " +
+					this.num_plazas + " plazas disponibles ";
 	}
 	
 	
