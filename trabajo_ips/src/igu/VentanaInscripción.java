@@ -29,6 +29,8 @@ import java.awt.SystemColor;
 import javax.swing.JComboBox;
 
 public class VentanaInscripción extends JFrame {
+	
+	
 
 	/**
 	 * 
