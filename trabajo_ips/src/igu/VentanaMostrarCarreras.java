@@ -39,7 +39,7 @@ public class VentanaMostrarCarreras extends JFrame {
 	private JLabel lblCompeticiones;
 
 	/**
-	 * Launch the application.eqwewq
+	 * Launch the application.eqwewqyyui
 	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
