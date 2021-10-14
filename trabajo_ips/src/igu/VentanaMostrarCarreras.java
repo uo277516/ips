@@ -12,6 +12,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
@@ -20,6 +21,7 @@ import logica.AtletaModel;
 import logica.CompeticionDto;
 import logica.CompeticionModel;
 import logica.InscripcionModel;
+import javax.swing.JLabel;
 
 public class VentanaMostrarCarreras extends JFrame {
 
@@ -28,7 +30,6 @@ public class VentanaMostrarCarreras extends JFrame {
 	 */
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private JTextField txtIntroduzca;
 	private JButton btnValidar;
 	private JTextArea txtInfo;
 	private JComboBox<CompeticionDto> cmboxCarreras;
@@ -37,6 +38,7 @@ public class VentanaMostrarCarreras extends JFrame {
 	private AtletaModel atl;
 	private CompeticionModel comp;
 	private JButton btnAceptar;
+	private JLabel lblFecha;
 
 	/**
 	 * Launch the application.
@@ -63,33 +65,23 @@ public class VentanaMostrarCarreras extends JFrame {
 		comp = new CompeticionModel();
 		setTitle("Selecci\u00F3n de Competici\u00F3n:");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 538, 348);
+		setBounds(100, 100, 542, 348);
 		contentPane = new JPanel();
 		contentPane.setBackground(Color.WHITE);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		contentPane.add(getTxtIntroduzca());
 		contentPane.add(getBtnValidar());
 		contentPane.add(getTxtInfo());
 		contentPane.add(getCmboxCarreras());
 		contentPane.add(getTextFecha());
 		contentPane.add(getBtnAceptar());
-	}
-
-	private JTextField getTxtIntroduzca() {
-		if (txtIntroduzca == null) {
-			txtIntroduzca = new JTextField();
-			txtIntroduzca.setText("Competiciones abiertas actualmente:");
-			txtIntroduzca.setBounds(24, 21, 276, 20);
-			txtIntroduzca.setColumns(10);
-		}
-		return txtIntroduzca;
+		contentPane.add(getLblFecha());
 	}
 
 	private JButton getBtnValidar() {
 		if (btnValidar == null) {
-			btnValidar = new JButton("Validar");
+			btnValidar = new JButton("Mostrar");
 			btnValidar.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					if(soloNumeros(getTextFecha().getText())) {
@@ -102,7 +94,7 @@ public class VentanaMostrarCarreras extends JFrame {
 			btnValidar.setFont(new Font("Tahoma", Font.PLAIN, 14));
 			btnValidar.setForeground(Color.WHITE);
 			btnValidar.setBackground(Color.GREEN);
-			btnValidar.setBounds(406, 18, 89, 23);
+			btnValidar.setBounds(355, 18, 89, 23);
 		}
 		return btnValidar;
 	}
@@ -158,7 +150,7 @@ public class VentanaMostrarCarreras extends JFrame {
 		if (textFecha == null) {
 			textFecha = new JTextField();
 			textFecha.setEditable(false);
-			textFecha.setBounds(310, 21, 86, 20);
+			textFecha.setBounds(239, 21, 86, 20);
 			textFecha.setColumns(10);
 			textFecha.setText(cambiarFormatoFecha());
 			cambiarFormatoFecha();
@@ -185,5 +177,13 @@ public class VentanaMostrarCarreras extends JFrame {
 			btnAceptar.setBounds(423, 275, 89, 23);
 		}
 		return btnAceptar;
+	}
+	private JLabel getLblFecha() {
+		if (lblFecha == null) {
+			lblFecha = new JLabel("Carreras abiertas actualmente:");
+			lblFecha.setFont(new Font("Tahoma", Font.PLAIN, 13));
+			lblFecha.setBounds(24, 24, 205, 17);
+		}
+		return lblFecha;
 	}
 }
