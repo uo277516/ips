@@ -28,7 +28,7 @@ public class BaseDatos {
 	public static void close(ResultSet rs, Statement st, Connection c) {
 		close(rs);
 		close(st);
-		close(c);
+		close(c); 
 	}
 
 	public static void close(ResultSet rs, Statement st) {
