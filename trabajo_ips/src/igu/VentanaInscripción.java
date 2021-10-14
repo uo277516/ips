@@ -1,13 +1,11 @@
 package igu;
 
-import java.awt.BorderLayout;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import logica.AtletaDto;
 import logica.AtletaModel;
 import logica.CompeticionDto;
 import logica.CompeticionModel;
@@ -29,6 +27,9 @@ import java.awt.SystemColor;
 import javax.swing.JComboBox;
 
 public class VentanaInscripción extends JFrame {
+	
+	
+	
 
 	/**
 	 * 
