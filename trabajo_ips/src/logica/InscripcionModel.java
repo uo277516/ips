@@ -15,9 +15,7 @@ public class InscripcionModel
 	
 public static String sql1 = "select * from inscripcion";
 public static String sql2 = "select * from inscripcion where inscripcion.email=?";
-public static String COMPID_INS = "select i.dni_a, i.categoria, i.email, i.fecha, i.metodo_pago, i.cantidad_pagada, i.horas, i.status"
-		+ " from inscripcion i"
-		+ " where i.id_c = ?";
+public static String COMPID_INS = "select * from inscripcion where id_c=?";
 
 	public List<InscripcionDto> getInscripciones() throws SQLException
 	{
@@ -103,7 +101,7 @@ public static String COMPID_INS = "select i.dni_a, i.categoria, i.email, i.fecha
         else return false;
 	}
 
-	public List<InscripcionDto> getInscripcionesDeUnaCompeticion(int i) throws SQLException{
+	public List<InscripcionDto> getInscripcionesDeUnaCompeticion(int id) throws SQLException{
 		List<InscripcionDto> inscripciones = new ArrayList<InscripcionDto>();
 		
 		Connection c = null;
@@ -112,6 +110,7 @@ public static String COMPID_INS = "select i.dni_a, i.categoria, i.email, i.fecha
         try {
             c = BaseDatos.getConnection();
             pst = c.prepareStatement(COMPID_INS);
+            pst.setInt(1, id);
             rs = pst.executeQuery();
 
             inscripciones = DtoAssembler.toInscripcionDtoList(rs);

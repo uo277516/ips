@@ -1,10 +1,11 @@
 package igu;
 
 import java.awt.Color;
+import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.time.LocalDate;
+import java.sql.SQLException;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -12,13 +13,11 @@ import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
-import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
-import logica.AtletaModel;
 import logica.CompeticionDto;
 import logica.CompeticionModel;
-import logica.InscripcionModel;
+import javax.swing.JLabel;
 
 public class VentanaMostrarCarrerasOrganizador extends JFrame {
 
@@ -27,22 +26,29 @@ public class VentanaMostrarCarrerasOrganizador extends JFrame {
 	 */
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private JTextField txtIntroduzca;
-	private JButton btnValidar;
-	private JTextArea txtInfo;
 	private JComboBox<CompeticionDto> cmboxCarreras;
-	private JTextField textFecha;
-	private InscripcionModel ins;
-	private AtletaModel atl;
 	private CompeticionModel comp;
 	private JButton btnAceptar;
+	private JLabel lblCompeticiones;
+	private JTextArea txtInfoCarrera;
 
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					VentanaMostrarCarrerasOrganizador frame = new VentanaMostrarCarrerasOrganizador();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+	
 	/**
 	 * Create the frame.
 	 */
 	public VentanaMostrarCarrerasOrganizador() {
-		ins = new InscripcionModel();
-		atl = new AtletaModel();
 		comp = new CompeticionModel();
 		setTitle("Selecci\u00F3n de Competici\u00F3n:");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -52,131 +58,63 @@ public class VentanaMostrarCarrerasOrganizador extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		contentPane.add(getTxtIntroduzca());
-		contentPane.add(getBtnValidar());
-		contentPane.add(getTxtInfo());
 		contentPane.add(getCmboxCarreras());
-		contentPane.add(getTextFecha());
 		contentPane.add(getBtnAceptar());
-	}
-
-	private JTextField getTxtIntroduzca() {
-		if (txtIntroduzca == null) {
-			txtIntroduzca = new JTextField();
-			txtIntroduzca.setText("Competiciones abiertas actualmente:");
-			txtIntroduzca.setBounds(24, 21, 276, 20);
-			txtIntroduzca.setColumns(10);
-		}
-		return txtIntroduzca;
-	}
-
-	private JButton getBtnValidar() {
-		if (btnValidar == null) {
-			btnValidar = new JButton("Validar");
-			btnValidar.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					if(soloNumeros(getTextFecha().getText())) {
-						cmboxCarreras.setModel(new DefaultComboBoxModel<CompeticionDto>(comp.getCompetcionesFecha(textFecha.getText())));
-					}
-				}
-
-				
-			});
-			btnValidar.setFont(new Font("Tahoma", Font.PLAIN, 14));
-			btnValidar.setForeground(Color.WHITE);
-			btnValidar.setBackground(Color.GREEN);
-			btnValidar.setBounds(406, 18, 89, 23);
-		}
-		return btnValidar;
-	}
-	
-	/**
-	 * Comprueba si la cadena esta formada por numeros
-	 * @param dni
-	 * @return
-	 */
-	private boolean soloNumeros(String fecha) {
-		System.out.println(textFecha.getText());
-		String numero="";
-		int contador =0;
-		String minumero="";
-		String[] numeros= {"0","1","2","3","4","5","6","7","8","9"};
-		for (int i=0;i<fecha.length();i++) {
-			numero=fecha.substring(i,i+1);
-			for (int j=0;j<numeros.length;j++) {
-				if (numero.equals(numeros[j])) {
-					minumero=minumero+numeros[j];
-				}
-			}
-			if (numero.equals("/")) {
-				contador++;
-			}
-		}
-		if (contador==2 && minumero.length()==8) {
-			return true;
-		}else
-			return false;
-				
-		
-	}
-	
-	private JTextArea getTxtInfo() {
-		if (txtInfo == null) {
-			txtInfo = new JTextArea();
-			txtInfo.setText("Se muestra: \r\nNombre---fecha competici\u00F3n---tipo---distancia---cuota---fecha fin inscripci\u00F3n\r\n---numero de plazas disponibles");
-			txtInfo.setFont(new Font("Tahoma", Font.PLAIN, 11));
-			txtInfo.setBounds(24, 72, 420, 54);
-		}
-		return txtInfo;
+		contentPane.add(getLblCompeticiones());
+		contentPane.add(getTxtInfoCarrera());
 	}
 	private JComboBox<CompeticionDto> getCmboxCarreras() {
 		if (cmboxCarreras == null) {
 			cmboxCarreras = new JComboBox<CompeticionDto>();
-			cmboxCarreras.setBounds(10, 137, 485, 22);
+			cmboxCarreras.setBounds(24, 137, 471, 22);
 			cmboxCarreras.setModel(new DefaultComboBoxModel<CompeticionDto>(comp.getCompeticionesArray()));
 		}
 		return cmboxCarreras;
 	}
-	private JTextField getTextFecha() {
-		if (textFecha == null) {
-			textFecha = new JTextField();
-			textFecha.setEditable(false);
-			textFecha.setBounds(310, 21, 86, 20);
-			textFecha.setColumns(10);
-			textFecha.setText(cambiarFormatoFecha());
-			cambiarFormatoFecha();
-		}
-		return textFecha;
-	}
-
-	private String cambiarFormatoFecha() {
-		String fechaString = String.valueOf(LocalDate.now());
-		String[] fechaPartida = fechaString.split("-");
-		String result ="";
-		for (int i = 0; i < fechaPartida.length; i++) {
-			result="/"+fechaPartida[i]+result;
-		}
-		return result.substring(1);
-		
-	}
+	
 	private JButton getBtnAceptar() {
 		if (btnAceptar == null) {
 			btnAceptar = new JButton("Aceptar");
+			btnAceptar.setOpaque(true);
 			btnAceptar.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					mostrarVentanaAtletaInscripcion();
+					try {
+						mostrarVentanaAtletaInscripcion();
+					} catch (SQLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 				}
 			});
 			btnAceptar.setBackground(Color.GREEN);
-			btnAceptar.setForeground(Color.WHITE);
+			btnAceptar.setForeground(Color.BLACK);
 			btnAceptar.setFont(new Font("Tahoma", Font.PLAIN, 14));
 			btnAceptar.setBounds(423, 275, 89, 23);
 		}
 		return btnAceptar;
 	}
 	
-	private void mostrarVentanaAtletaInscripcion() {
-		// TODO Auto-generated method stub
-		
+	private void mostrarVentanaAtletaInscripcion() throws SQLException {
+		VentanaAtletaInscripcion vai = new VentanaAtletaInscripcion((CompeticionDto) getCmboxCarreras().getSelectedItem());
+		this.dispose();
+		vai.setVisible(true); 
+	}
+	private JLabel getLblCompeticiones() {
+		if (lblCompeticiones == null) {
+			lblCompeticiones = new JLabel("Competiciones");
+			lblCompeticiones.setFont(new Font("Lucida Grande", Font.BOLD, 25));
+			lblCompeticiones.setBounds(24, 6, 389, 46);
+		}
+		return lblCompeticiones;
+	}
+	private JTextArea getTxtInfoCarrera() {
+		if (txtInfoCarrera == null) {
+			txtInfoCarrera = new JTextArea();
+			txtInfoCarrera.setFocusable(false);
+			txtInfoCarrera.setEditable(false);
+			txtInfoCarrera.setText("Se muestra: Nombre - Fecha de la competición - Tipo - Distancia - Cuota \n - Fecha de fin de inscripción");
+			txtInfoCarrera.setBounds(24, 76, 471, 49);
+		}
+		return txtInfoCarrera;
 	}
 }

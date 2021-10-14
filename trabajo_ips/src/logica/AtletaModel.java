@@ -15,7 +15,7 @@ public class AtletaModel
 	
 	public static String sql1 = "select * from atleta";
 	public static String COMPID_ATL = "select a.dni, a.nombre, a.sexo, a.f_nac"
-			+ " from atleta a, inscripcion i"
+			+ " from atleta as a, inscripcion as i"
 			+ " where a.dni = i.dni_a"
 			+ " and i.id_c = ?";
 	
@@ -58,7 +58,7 @@ public class AtletaModel
         return listaAtletas;
 	}
 	
-	public List<AtletaDto> getAletasDeUnaCompeticion(int i) throws SQLException{
+	public List<AtletaDto> getAletasDeUnaCompeticion(int id) throws SQLException{
 		List<AtletaDto> atletas = new ArrayList<AtletaDto>();
 		
 		Connection c = null;
@@ -67,6 +67,7 @@ public class AtletaModel
         try {
             c = BaseDatos.getConnection();
             pst = c.prepareStatement(COMPID_ATL);
+            pst.setInt(1, id);
             rs = pst.executeQuery();
 
             atletas = DtoAssembler.toAtletaDtoList(rs);
@@ -78,6 +79,7 @@ public class AtletaModel
             pst.close();
             c.close();
         }
+        
         return atletas;
 	}
 }

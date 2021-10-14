@@ -3,6 +3,7 @@ package igu;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
 
 import logica.AtletaDto;
 import logica.AtletaModel;
@@ -19,6 +20,16 @@ import java.util.List;
 import javax.swing.JTextPane;
 import java.awt.Color;
 import javax.swing.JTextArea;
+import java.awt.BorderLayout;
+import java.awt.Panel;
+import java.awt.GridLayout;
+import javax.swing.BoxLayout;
+import java.awt.FlowLayout;
+import java.awt.Component;
+import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
+import javax.swing.JTable;
+import javax.swing.SwingConstants;
 
 public class VentanaAtletaInscripcion extends JFrame {
 
@@ -33,8 +44,10 @@ public class VentanaAtletaInscripcion extends JFrame {
 	private JLabel lblTituloInscripciones;
 	private JLabel lblAtletas;
 	private JLabel lblInscripciones;
-	private JTextArea txtAreaAtletaInfo;
-	private JTextArea txtrHey;
+	private Panel panel;
+	private Panel pnlAtletaInsTitulo;
+	private Panel pnlTxtArea;
+	private JTable table;
 //
 //	/**
 //	 * Launch the application.
@@ -55,27 +68,25 @@ public class VentanaAtletaInscripcion extends JFrame {
 	/**
 	 * Create the frame.
 	 * @param comp 
+	 * @throws SQLException 
 	 */
-	public VentanaAtletaInscripcion(CompeticionDto comp) {
+	public VentanaAtletaInscripcion(CompeticionDto comp) throws SQLException {
 		this.competition = comp;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
-		contentPane.setBackground(Color.LIGHT_GRAY);
+		contentPane.setBackground(Color.WHITE);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
-		contentPane.setLayout(null);
-		contentPane.add(getLblTituloInscripciones());
-		contentPane.add(getLblAtletas());
-		contentPane.add(getLblInscripciones());
-		contentPane.add(getTxtAreaAtletaInfo());
-		contentPane.add(getTxtrHey());
+		contentPane.setLayout(new BorderLayout(0, 0));
+		contentPane.add(getLblTituloInscripciones(), BorderLayout.NORTH);
+		contentPane.add(getPanel(), BorderLayout.CENTER);
 	}
 	private JLabel getLblTituloInscripciones() {
 		if (lblTituloInscripciones == null) {
 			lblTituloInscripciones = new JLabel("Inscripciones para la " + this.competition.getNombre());
-			lblTituloInscripciones.setFont(new Font("Lucida Grande", Font.PLAIN, 17));
-			lblTituloInscripciones.setBounds(23, 6, 403, 40);
+			lblTituloInscripciones.setHorizontalTextPosition(SwingConstants.CENTER);
+			lblTituloInscripciones.setFont(new Font("Lucida Grande", Font.BOLD, 25));
 		}
 		return lblTituloInscripciones;
 	}
@@ -83,7 +94,6 @@ public class VentanaAtletaInscripcion extends JFrame {
 		if (lblAtletas == null) {
 			lblAtletas = new JLabel("Atletas");
 			lblAtletas.setFont(new Font("Lucida Grande", Font.PLAIN, 15));
-			lblAtletas.setBounds(23, 54, 136, 33);
 		}
 		return lblAtletas;
 	}
@@ -91,7 +101,6 @@ public class VentanaAtletaInscripcion extends JFrame {
 		if (lblInscripciones == null) {
 			lblInscripciones = new JLabel("Inscripciones");
 			lblInscripciones.setFont(new Font("Lucida Grande", Font.PLAIN, 15));
-			lblInscripciones.setBounds(166, 54, 260, 33);
 		}
 		return lblInscripciones;
 	}
@@ -105,29 +114,55 @@ public class VentanaAtletaInscripcion extends JFrame {
 		InscripcionModel im = new InscripcionModel();
 		return im.getInscripcionesDeUnaCompeticion(this.competition.getId());
 	}
-	private JTextArea getTxtAreaAtletaInfo() {
-		if (txtAreaAtletaInfo == null) {
-			txtAreaAtletaInfo = new JTextArea();
-			txtAreaAtletaInfo.setText("hey");
-			txtAreaAtletaInfo.setBounds(23, 99, 127, 156);
-		}
-		return txtAreaAtletaInfo;
-	}
-	private JTextArea getTxtrHey() {
-		if (txtrHey == null) {
-			txtrHey = new JTextArea();
-			txtrHey.setText("hey");
-			txtrHey.setBounds(166, 99, 260, 156);
-		}
-		return txtrHey;
-	}
 	
-	private String getInfoAtletas() throws SQLException {
-		List<AtletaDto> atletas = getAtletas();
-		String str = "";
-		for(AtletaDto a : atletas) {
-			str += a.getDni() + " - " + a.getNombre() + "\n";
+	private Panel getPanel() throws SQLException {
+		if (panel == null) {
+			panel = new Panel();
+			panel.setLayout(new BorderLayout(0, 0));
+			panel.add(getPnlAtletaInsTitulo(), BorderLayout.NORTH);
+			panel.add(getPanel_1_1(), BorderLayout.CENTER);
 		}
-		return str;
+		return panel;
+	}
+	private Panel getPnlAtletaInsTitulo() throws SQLException {
+		if (pnlAtletaInsTitulo == null) {
+			pnlAtletaInsTitulo = new Panel();
+			pnlAtletaInsTitulo.setLayout(new GridLayout(0, 2, 0, 0));
+			pnlAtletaInsTitulo.add(getLblAtletas());
+			pnlAtletaInsTitulo.add(getLblInscripciones());
+		}
+		return pnlAtletaInsTitulo;
+	}
+	private Panel getPanel_1_1() throws SQLException {
+		if (pnlTxtArea == null) {
+			pnlTxtArea = new Panel();
+			pnlTxtArea.setLayout(new BorderLayout(0, 0));
+			pnlTxtArea.add(getTable(), BorderLayout.CENTER);
+		}
+		return pnlTxtArea;
+	}
+	private JTable getTable() throws SQLException {
+		if (table == null) {
+			table = new JTable();
+			table.setSelectionBackground(new Color(106, 31, 109));
+			table.setBackground(Color.LIGHT_GRAY);
+			DefaultTableModel modelo = new DefaultTableModel();
+			table.setModel(modelo);
+			modelo.addColumn("Atleta");
+			modelo.addColumn("Inscripción");
+			String[][] info = new String[getAtletas().size()][2];
+			List<AtletaDto> atletas = getAtletas();
+			List<InscripcionDto> inscripciones = getInscripciones();
+			
+			for(int i = 0; i < atletas.size(); i++) {
+				info[i][0] = atletas.get(i).getDni() + " - " 
+						+ atletas.get(i).getNombre();
+				info[i][1] = inscripciones.get(i).getCategoria() + " - " 
+						+ inscripciones.get(i).getFecha() + " - " 
+						+ inscripciones.get(i).getStatus();
+				modelo.addRow(info[i]);
+			}
+		}
+		return table;
 	}
 }
