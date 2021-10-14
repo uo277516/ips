@@ -59,11 +59,11 @@ public class AtletaModel {
 		ResultSet rs = null;
 		try {
 			c = BaseDatos.getConnection();
-			pst = c.prepareStatement(sql1);
+			pst = c.prepareStatement(sqlFindByDni);
 			pst.setString(1, dni);
 			rs = pst.executeQuery();
-
-			// Añadimos los pedidos a la lista
+			
+			rs.next();
 			a = DtoAssembler.toAtletaDto(rs);
 
 		} catch (SQLException e) {
@@ -89,7 +89,7 @@ public class AtletaModel {
 			pst.setString(1, email);
 			rs = pst.executeQuery();
 
-			// Añadimos los pedidos a la lista
+			rs.next();
 			a = DtoAssembler.toAtletaDto(rs);
 
 		} catch (SQLException e) {

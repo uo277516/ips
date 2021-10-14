@@ -11,12 +11,10 @@ import logica.InscripcionDto;
 
 public class DtoAssembler {
 
-	public static List<AtletaDto> toAtletaDtoList (ResultSet rs)
-	{
+	public static List<AtletaDto> toAtletaDtoList(ResultSet rs) {
 		List<AtletaDto> lista = new ArrayList<AtletaDto>();
 		try {
-			while(rs.next())
-			{
+			while (rs.next()) {
 				lista.add(toAtletaDto(rs));
 			}
 		} catch (SQLException e) {
@@ -34,15 +32,11 @@ public class DtoAssembler {
 		a.setSexo(rs.getString("sexo"));
 		return a;
 	}
-	
-	
-	
-	public static List<CompeticionDto> toCompeticionDtoList (ResultSet rs)
-	{
+
+	public static List<CompeticionDto> toCompeticionDtoList(ResultSet rs) {
 		List<CompeticionDto> lista = new ArrayList<CompeticionDto>();
 		try {
-			while(rs.next())
-			{
+			while (rs.next()) {
 				lista.add(cogerDatosCompeticion(rs));
 			}
 		} catch (SQLException e) {
@@ -69,9 +63,8 @@ public class DtoAssembler {
 	public static List<InscripcionDto> toInscripcionDtoList(ResultSet rs) {
 		List<InscripcionDto> lista = new ArrayList<InscripcionDto>();
 		try {
-			while(rs.next())
-			{
-				lista.add(cogerDatosInscripcion(rs));
+			while (rs.next()) {
+				lista.add(toInscripcionDto(rs));
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -80,19 +73,18 @@ public class DtoAssembler {
 		return lista;
 	}
 
-	private static InscripcionDto cogerDatosInscripcion(ResultSet rs) throws SQLException {
+	private static InscripcionDto toInscripcionDto(ResultSet rs) throws SQLException {
 		InscripcionDto i = new InscripcionDto();
 		i.setCantidad_pagada(Float.parseFloat(rs.getString("cantidad_pagada")));
 		i.setCategoria(rs.getString("categoria"));
 		i.setDni_a(rs.getString("dni_a"));
 		i.setEmail(rs.getString("email"));
 		i.setFecha(rs.getString("fecha"));
-		i.setHoras(Integer.parseInt(rs.getString("horas")));
-		i.setId_c(rs.getString("id_c"));
+		i.setHoras(rs.getString("horas") != null ? Integer.parseInt(rs.getString("horas")) : 0);
+		i.setId_c(rs.getInt("id_c"));
 		i.setMetodo_pago(rs.getString("metodo_pago"));
-		i.setMinutos(Integer.parseInt(rs.getString("minutos")));
+		i.setMinutos(rs.getString("minutos") != null ? Integer.parseInt(rs.getString("minutos")) : 0);
 		return i;
 	}
-	
-	
+
 }

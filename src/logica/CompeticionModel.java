@@ -61,13 +61,34 @@ public class CompeticionModel {
 	public void listarClasificacion(int carreraId) throws SQLException {
 		AtletaDto a;
 		List<InscripcionDto> inscripciones = im.getInscripcionesPorTiempo(carreraId);
+		System.out.println("----- Clasificacion general -----");
 		for (InscripcionDto i : inscripciones) {
 			a = am.findAtletaByDni(i.getDni_a());
-			System.out.println("Nombre: " + a.getNombre() + "Sexo: " + a.getSexo() + "Tiempo: " + i.getHoras() != null
-					? i.getHoras()
-					: "---" + "h " + i.getMinutos() != null ? i.getMinutos() : "---" + " minutos");
+			if (i.getHoras() == 0 && i.getMinutos() == 0)
+				System.out.println("Nombre: " + a.getNombre() + " - Sexo: " + a.getSexo() + " - Tiempo: --- ");
+			else
+				System.out.println("Nombre: " + a.getNombre() + " - Sexo: " + a.getSexo() + " - Tiempo: " + i.getHoras()
+						+ "h " + i.getMinutos() + " minutos");
 		}
+	}
 
+	public void listarClasificacionPorCategoria(int carreraId, String sql) throws SQLException {
+		listarClasificacionPorSexo(carreraId, "masculino");
+		listarClasificacionPorSexo(carreraId, "femenino");
+	}
+
+	public void listarClasificacionPorSexo(int carreraId, String sexo) throws SQLException {
+		AtletaDto a;
+		List<InscripcionDto> inscripciones = im.getInscripcionesPorTiempoYSexo(carreraId, sexo);
+		System.out.println("----- Clasificacion sexo " + sexo + " -----");
+		for (InscripcionDto i : inscripciones) {
+			a = am.findAtletaByDni(i.getDni_a());
+			if (i.getHoras() == 0 && i.getMinutos() == 0)
+				System.out.println("Nombre: " + a.getNombre() + " - Sexo: " + a.getSexo() + " - Tiempo: --- ");
+			else
+				System.out.println("Nombre: " + a.getNombre() + " - Sexo: " + a.getSexo() + " - Tiempo: " + i.getHoras()
+						+ "h " + i.getMinutos() + " minutos");
+		}
 	}
 
 }
