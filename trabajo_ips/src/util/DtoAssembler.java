@@ -32,6 +32,7 @@ public class DtoAssembler {
 		a.setF_nac(rs.getString("f_nac"));
 		a.setNombre(rs.getString("nombre"));
 		a.setSexo(rs.getString("sexo"));
+		a.setEmail(rs.getString("email"));
 		return a;
 	}
 	
@@ -92,6 +93,10 @@ public class DtoAssembler {
 		i.setMetodo_pago(rs.getString("metodo_pago"));
 		i.setMinutos(Integer.parseInt(rs.getString("minutos")));
 		return i;
+	}
+
+	public static AtletaDto toAtletaDto(ResultSet rs) throws SQLException {
+		return cogerDatosAtleta(rs);
 	}
 	
 }

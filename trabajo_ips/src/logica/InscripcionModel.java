@@ -15,7 +15,51 @@ public class InscripcionModel
 	
 public static String sql1 = "select * from inscripcion";
 public static String sql2 = "select * from inscripcion where inscripcion.email=?";
-public static String sql3 = "insert into inscripcion values ('58o',?,'juvenil',?,'07/04/2022','efectivo',340,9,1)";
+public static String sql3 = "insert into inscripcion (dni_a, id_c, email) values (?,?,?)";
+public static String sql4 = "select * from atleta where atleta.email=inscripcion.email "
+		+ "						and inscripcion.email=?";
+
+
+
+
+	public AtletaDto findAtletaEmail(String email)
+	{
+		AtletaDto a = null;
+		try {
+			a = findAtletaByEmail(email);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return a;
+	}
+	
+
+	private AtletaDto findAtletaByEmail(String email) throws SQLException
+	{
+		AtletaDto a = null;
+		Connection c = null;
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        try {
+            c = BaseDatos.getConnection();
+            pst = c.prepareStatement(sql4);
+            pst.setString(1, email);
+            rs = pst.executeQuery();
+            a = DtoAssembler.toAtletaDto(rs);
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+//        	if (rs==null) return false;
+//        	else {
+            rs.close();
+            pst.close();
+            c.close();
+//        	}
+        }
+        return a;
+	}
 	
 	public List<InscripcionDto> getInscripciones() throws SQLException
 	{
@@ -113,7 +157,9 @@ public static String sql3 = "insert into inscripcion values ('58o',?,'juvenil',?
 	}
 	
 
-	private void agregarParticipante(String text, int id) throws SQLException {
+	private void agregarParticipante(String email, int id) throws SQLException {
+		AtletaDto a = findAtletaEmail(email);
+		String dni = a.getDni();
 		// Conexión a la base de datos
         Connection c = null;
         PreparedStatement pst = null;
@@ -121,8 +167,9 @@ public static String sql3 = "insert into inscripcion values ('58o',?,'juvenil',?
         try {
             c = BaseDatos.getConnection();
             pst = c.prepareStatement(sql3);
-            pst.setInt(1, id);
-            pst.setString(2, text);
+            pst.setString(1, dni);
+            pst.setInt(2, id);
+            pst.setString(3, email);
            
              
             pst.executeUpdate();

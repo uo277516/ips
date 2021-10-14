@@ -3,6 +3,7 @@ package logica;
 public class AtletaDto {
 	
 	private String nombre;
+	private String email;
 	private String dni;
 	public String getNombre() {
 		return nombre;
@@ -53,9 +54,17 @@ public class AtletaDto {
 	}
 
 
+
+
 	@Override
 	public String toString() {
-		return "AtletaDto [nombre=" + nombre + ", dni=" + dni + ", sexo=" + sexo + ", f_nac=" + f_nac + "]";
+		return "AtletaDto [nombre=" + nombre + ", email=" + email + ", dni=" + dni + ", sexo=" + sexo + ", f_nac="
+				+ f_nac + "]";
+	}
+
+
+	public void setEmail(String email) {
+		this.email=email;
 	}
 	
 	
