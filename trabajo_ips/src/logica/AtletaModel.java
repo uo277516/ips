@@ -14,6 +14,10 @@ public class AtletaModel
 {
 	
 	public static String sql1 = "select * from atleta";
+	public static String COMPID_ATL = "select a.dni, a.nombre, a.sexo, a.f_nac"
+			+ " from atleta a, inscripcion i"
+			+ " where a.dni = i.dni_a"
+			+ " and i.id_c = ?";
 	
 	public List<AtletaDto> getAtletas() throws SQLException
 	{
@@ -27,7 +31,7 @@ public class AtletaModel
 	{
 		List<AtletaDto> listaAtletas = new ArrayList<AtletaDto>();
 
-        // Conexión a la base de datos
+        // Conexiï¿½n a la base de datos
         Connection c = null;
         PreparedStatement pst = null;
         ResultSet rs = null;
@@ -36,7 +40,7 @@ public class AtletaModel
             pst = c.prepareStatement(sql1);
             rs = pst.executeQuery();
 
-            // Añadimos los pedidos a la lista
+            // Aï¿½adimos los pedidos a la lista
             listaAtletas = DtoAssembler.toAtletaDtoList(rs);
 
         } catch (SQLException e) {
@@ -54,6 +58,26 @@ public class AtletaModel
         return listaAtletas;
 	}
 	
-	
-	
+	public List<AtletaDto> getAletasDeUnaCompeticion(int i) throws SQLException{
+		List<AtletaDto> atletas = new ArrayList<AtletaDto>();
+		
+		Connection c = null;
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        try {
+            c = BaseDatos.getConnection();
+            pst = c.prepareStatement(COMPID_ATL);
+            rs = pst.executeQuery();
+
+            atletas = DtoAssembler.toAtletaDtoList(rs);
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            rs.close();
+            pst.close();
+            c.close();
+        }
+        return atletas;
+	}
 }

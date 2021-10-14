@@ -26,7 +26,7 @@ import java.awt.event.ActionEvent;
 import java.awt.SystemColor;
 import javax.swing.JComboBox;
 
-public class VentanaInscripción extends JFrame {
+public class VentanaInscripcion extends JFrame {
 	
 	
 	
@@ -55,7 +55,7 @@ public class VentanaInscripción extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					VentanaInscripción frame = new VentanaInscripción();
+					VentanaInscripcion frame = new VentanaInscripcion();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -67,7 +67,7 @@ public class VentanaInscripción extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public VentanaInscripción() {
+	public VentanaInscripcion() {
 		ins = new InscripcionModel();
 		atl=new AtletaModel();
 		comp = new CompeticionModel();
@@ -153,11 +153,11 @@ public class VentanaInscripción extends JFrame {
 	
 	protected void mostrarErrorVacio() {
 		// TODO Auto-generated method stub
-		JOptionPane.showMessageDialog(this, "El campo email no puede estar vacío");
+		JOptionPane.showMessageDialog(this, "El campo email no puede estar vacï¿½o");
 	}
 
 	protected void mostrarErrorNoRegis() {
-		JOptionPane.showMessageDialog(this, "Tu email todavía no ha sido registrado");
+		JOptionPane.showMessageDialog(this, "Tu email todavï¿½a no ha sido registrado");
 	}
 
 	protected boolean camposCorrectos() {

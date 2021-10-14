@@ -2,6 +2,8 @@ package logica;
 
 public class InscripcionDto {
 	
+	
+
 	private String dni_a;
 	private String id_c;
 	private String categoria;
@@ -10,6 +12,7 @@ public class InscripcionDto {
 	private String metodo_pago;
 	private float cantidad_pagada;
 	private int horas;
+	private String status;
 	public String getDni_a() {
 		return dni_a;
 	}
@@ -83,6 +86,14 @@ public class InscripcionDto {
 	}
 
 	private int minutos;
+	
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
 	
 	public InscripcionDto()
 	{

@@ -15,7 +15,10 @@ public class InscripcionModel
 	
 public static String sql1 = "select * from inscripcion";
 public static String sql2 = "select * from inscripcion where inscripcion.email=?";
-	
+public static String COMPID_INS = "select i.dni_a, i.categoria, i.email, i.fecha, i.metodo_pago, i.cantidad_pagada, i.horas, i.status"
+		+ " from inscripcion i"
+		+ " where i.id_c = ?";
+
 	public List<InscripcionDto> getInscripciones() throws SQLException
 	{
 		return getAllInscripciones();
@@ -26,7 +29,7 @@ public static String sql2 = "select * from inscripcion where inscripcion.email=?
 	{
 		List<InscripcionDto> listaInscrpcines = new ArrayList<InscripcionDto>();
 
-        // Conexión a la base de datos
+        // Conexiï¿½n a la base de datos
         Connection c = null;
         PreparedStatement pst = null;
         ResultSet rs = null;
@@ -35,7 +38,7 @@ public static String sql2 = "select * from inscripcion where inscripcion.email=?
             pst = c.prepareStatement(sql1);
             rs = pst.executeQuery();
 
-            // Añadimos los pedidos a la lista
+            // Aï¿½adimos los pedidos a la lista
             listaInscrpcines = DtoAssembler.toInscripcionDtoList(rs);
 
         } catch (SQLException e) {
@@ -72,7 +75,7 @@ public static String sql2 = "select * from inscripcion where inscripcion.email=?
 	{
 		List<InscripcionDto> listaAtletas = new ArrayList<InscripcionDto>();
 
-        // Conexión a la base de datos
+        // Conexiï¿½n a la base de datos
         Connection c = null;
         PreparedStatement pst = null;
         ResultSet rs = null;
@@ -82,7 +85,7 @@ public static String sql2 = "select * from inscripcion where inscripcion.email=?
             pst.setString(1, email);
             rs = pst.executeQuery();
 
-            // Añadimos los pedidos a la lista
+            // Aï¿½adimos los pedidos a la lista
             listaAtletas = DtoAssembler.toInscripcionDtoList(rs);
 
         } catch (SQLException e) {
@@ -100,4 +103,26 @@ public static String sql2 = "select * from inscripcion where inscripcion.email=?
         else return false;
 	}
 
+	public List<InscripcionDto> getInscripcionesDeUnaCompeticion(int i) throws SQLException{
+		List<InscripcionDto> inscripciones = new ArrayList<InscripcionDto>();
+		
+		Connection c = null;
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        try {
+            c = BaseDatos.getConnection();
+            pst = c.prepareStatement(COMPID_INS);
+            rs = pst.executeQuery();
+
+            inscripciones = DtoAssembler.toInscripcionDtoList(rs);
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            rs.close();
+            pst.close();
+            c.close();
+        }
+        return inscripciones;
+	}
 }
