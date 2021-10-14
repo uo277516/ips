@@ -12,7 +12,6 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
@@ -30,7 +29,6 @@ public class VentanaMostrarCarreras extends JFrame {
 	 */
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private JButton btnValidar;
 	private JTextArea txtInfo;
 	private JComboBox<CompeticionDto> cmboxCarreras;
 	private JTextField textFecha;
@@ -38,7 +36,7 @@ public class VentanaMostrarCarreras extends JFrame {
 	private AtletaModel atl;
 	private CompeticionModel comp;
 	private JButton btnAceptar;
-	private JLabel lblFecha;
+	private JLabel lblCompeticiones;
 
 	/**
 	 * Launch the application.
@@ -65,38 +63,17 @@ public class VentanaMostrarCarreras extends JFrame {
 		comp = new CompeticionModel();
 		setTitle("Selecci\u00F3n de Competici\u00F3n:");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 542, 348);
+		setBounds(100, 100, 538, 348);
 		contentPane = new JPanel();
 		contentPane.setBackground(Color.WHITE);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		contentPane.add(getBtnValidar());
 		contentPane.add(getTxtInfo());
 		contentPane.add(getCmboxCarreras());
 		contentPane.add(getTextFecha());
 		contentPane.add(getBtnAceptar());
-		contentPane.add(getLblFecha());
-	}
-
-	private JButton getBtnValidar() {
-		if (btnValidar == null) {
-			btnValidar = new JButton("Mostrar");
-			btnValidar.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					if(soloNumeros(getTextFecha().getText())) {
-						cmboxCarreras.setModel(new DefaultComboBoxModel<CompeticionDto>(comp.getCompetcionesFecha(textFecha.getText())));
-					}
-				}
-
-				
-			});
-			btnValidar.setFont(new Font("Tahoma", Font.PLAIN, 14));
-			btnValidar.setForeground(Color.WHITE);
-			btnValidar.setBackground(Color.GREEN);
-			btnValidar.setBounds(355, 18, 89, 23);
-		}
-		return btnValidar;
+		contentPane.add(getLblCompeticiones());
 	}
 	
 	/**
@@ -141,8 +118,8 @@ public class VentanaMostrarCarreras extends JFrame {
 	private JComboBox<CompeticionDto> getCmboxCarreras() {
 		if (cmboxCarreras == null) {
 			cmboxCarreras = new JComboBox<CompeticionDto>();
-			cmboxCarreras.setBounds(10, 137, 485, 22);
-			cmboxCarreras.setModel(new DefaultComboBoxModel<CompeticionDto>(comp.getCompeticionesArray()));
+			cmboxCarreras.setBounds(24, 139, 485, 22);
+			cmboxCarreras.setModel(new DefaultComboBoxModel<CompeticionDto>(comp.getCompetcionesFecha(cambiarFormatoFecha())));
 		}
 		return cmboxCarreras;
 	}
@@ -150,10 +127,10 @@ public class VentanaMostrarCarreras extends JFrame {
 		if (textFecha == null) {
 			textFecha = new JTextField();
 			textFecha.setEditable(false);
-			textFecha.setBounds(239, 21, 86, 20);
+			textFecha.setBounds(241, 22, 86, 20);
 			textFecha.setColumns(10);
 			textFecha.setText(cambiarFormatoFecha());
-			cambiarFormatoFecha();
+			//cambiarFormatoFecha();
 		}
 		return textFecha;
 	}
@@ -170,20 +147,32 @@ public class VentanaMostrarCarreras extends JFrame {
 	}
 	private JButton getBtnAceptar() {
 		if (btnAceptar == null) {
-			btnAceptar = new JButton("Aceptar");
+			btnAceptar = new JButton("Siguiente");
+			btnAceptar.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					pasarAInscripcion();
+				}
+			});
 			btnAceptar.setBackground(Color.GREEN);
 			btnAceptar.setForeground(Color.WHITE);
 			btnAceptar.setFont(new Font("Tahoma", Font.PLAIN, 14));
-			btnAceptar.setBounds(423, 275, 89, 23);
+			btnAceptar.setBounds(393, 275, 119, 23);
 		}
 		return btnAceptar;
 	}
-	private JLabel getLblFecha() {
-		if (lblFecha == null) {
-			lblFecha = new JLabel("Carreras abiertas actualmente:");
-			lblFecha.setFont(new Font("Tahoma", Font.PLAIN, 13));
-			lblFecha.setBounds(24, 24, 205, 17);
+	protected void pasarAInscripcion() {
+		this.dispose();
+		VentanaInscripción vPal = new VentanaInscripción(this, (CompeticionDto) cmboxCarreras.getSelectedItem());
+		vPal.setLocationRelativeTo(this);
+		vPal.setVisible(true);
+	}
+
+	private JLabel getLblCompeticiones() {
+		if (lblCompeticiones == null) {
+			lblCompeticiones = new JLabel("Competiciones abiertas actualmente a d\u00EDa:");
+			lblCompeticiones.setFont(new Font("Tahoma", Font.PLAIN, 11));
+			lblCompeticiones.setBounds(24, 28, 223, 13);
 		}
-		return lblFecha;
+		return lblCompeticiones;
 	}
 }

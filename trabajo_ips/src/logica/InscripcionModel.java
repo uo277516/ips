@@ -16,8 +16,7 @@ public class InscripcionModel
 public static String sql1 = "select * from inscripcion";
 public static String sql2 = "select * from inscripcion where inscripcion.email=?";
 public static String sql3 = "insert into inscripcion (dni_a, id_c, email) values (?,?,?)";
-public static String sql4 = "select * from atleta where atleta.email=inscripcion.email "
-		+ "						and inscripcion.email=?";
+public static String sql4 = "select * from atleta where atleta.email=?";
 
 
 
@@ -45,18 +44,18 @@ public static String sql4 = "select * from atleta where atleta.email=inscripcion
             c = BaseDatos.getConnection();
             pst = c.prepareStatement(sql4);
             pst.setString(1, email);
+            //System.out.println(pst);
             rs = pst.executeQuery();
+            rs.next();
+            
             a = DtoAssembler.toAtletaDto(rs);
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
-//        	if (rs==null) return false;
-//        	else {
             rs.close();
             pst.close();
             c.close();
-//        	}
         }
         return a;
 	}
@@ -184,5 +183,45 @@ public static String sql4 = "select * from atleta where atleta.email=inscripcion
             c.close();
         }
 	}
+
+//
+//	public AtletaDto getNombreEmail(String email)
+//	{
+//		AtletaDto s = null;
+//		try {
+//			s = getNombreByEmail(email);
+//		} catch (SQLException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		return s;
+//	}
+//	
+//	
+//	private AtletaDto getNombreByEmail(String email) throws SQLException 
+//	{
+//		AtletaDto a = new AtletaDto();
+//		 // Conexión a la base de datos
+//        Connection c = null;
+//        PreparedStatement pst = null;
+//        ResultSet rs = null;
+//        try {
+//            c = BaseDatos.getConnection();
+//            pst = c.prepareStatement(sql5);
+//            pst.setString(1, email);
+//            rs = pst.executeQuery();
+//            rs.next();
+//            a = DtoAssembler.toAtletaDto(rs);
+//
+//        } catch (SQLException e) {
+//            throw new RuntimeException(e);
+//        } finally {
+//            rs.close();
+//            pst.close();
+//            c.close();
+//        }
+//
+//		return a;
+//	}
 
 }
