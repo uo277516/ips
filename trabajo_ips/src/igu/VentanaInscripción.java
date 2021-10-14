@@ -70,7 +70,7 @@ public class VentanaInscripción extends JFrame {
 	/**
 	 * Create the frame.
 	 * @param competicionDto 
-	 * @param ventanaMostrarCarreras 
+	 * @param ventanaMostrarCarreras hola que tal
 	 */
 	public VentanaInscripción(VentanaMostrarCarreras ventanaMostrarCarreras, CompeticionDto competicionDto) {
 		ins = new InscripcionModel();
