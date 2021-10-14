@@ -15,9 +15,10 @@ public class AtletaModel
 	
 	public static String sql1 = "select * from atleta";
 	public static String sql2 = "select * from atleta, inscripcion, competicion"
-			+ "	    where atleta.dni= ? and "
+			+ "		where "
 			+ " 	atleta.dni = inscripcion.dni_a and "
 			+ "     inscripcion.id_c = competicion.id and "
+			+ "		inscripcion.email=? and "
 			+ "     competicion.nombre=?";
 	
 	
@@ -54,10 +55,10 @@ public class AtletaModel
             c.close();
         }
 
-//        for (AtletaDto atletaDto : listaAtletas) {
-//			System.out.println(atletaDto.getDni() + " " + atletaDto.getF_nac()
-//			);
-//		}
+        for (AtletaDto atletaDto : listaAtletas) {
+			System.out.println(atletaDto
+			);
+		}
         return listaAtletas;
 	}
 	
@@ -108,12 +109,11 @@ public class AtletaModel
 //			);
 //		}
         if (listaAtletas.size()>0) { //si ya esta registrado en esa carrera
-        	System.out.println(listaAtletas.get(0).getDni());
+        	System.out.println("Ya se ha registrado en esta competicion");
         	return true;
         }
         else {
-        	System.out.println("no registrado");
-
+        	System.out.println("no registrado, puede registrarse");
         	return false;
         }
 	}

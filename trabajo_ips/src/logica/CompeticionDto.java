@@ -68,11 +68,17 @@ public class CompeticionDto {
 	public CompeticionDto()
 	{
 	}
-	
-	public String toString()
-	{
-		return this.nombre + " - " + this.f_comp + " - " + this.distancia + "km.";
+	@Override
+	public String toString() {
+		return "CompeticionDto [id=" + id + ", nombre=" + nombre + ", f_comp=" + f_comp + ", tipo=" + tipo
+				+ ", distancia=" + distancia + ", cuota=" + cuota + ", f_fin=" + f_fin + ", num_plazas=" + num_plazas
+				+ ", f_inicio=" + f_inicio + "]";
 	}
+	
+//	public String toString()
+//	{
+//		return this.nombre + " - " + this.f_comp + " - " + this.distancia + "km.";
+//	}
 	
 	
 

@@ -52,4 +52,12 @@ public class AtletaDto {
 	{
 	}
 
+
+	@Override
+	public String toString() {
+		return "AtletaDto [nombre=" + nombre + ", dni=" + dni + ", sexo=" + sexo + ", f_nac=" + f_nac + "]";
+	}
+	
+	
+
 }

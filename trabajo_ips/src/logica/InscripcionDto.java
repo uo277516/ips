@@ -2,6 +2,13 @@ package logica;
 
 public class InscripcionDto {
 	
+	@Override
+	public String toString() {
+		return "InscripcionDto [dni_a=" + dni_a + ", id_c=" + id_c + ", categoria=" + categoria + ", email=" + email
+				+ ", fecha=" + fecha + ", metodo_pago=" + metodo_pago + ", cantidad_pagada=" + cantidad_pagada
+				+ ", horas=" + horas + ", minutos=" + minutos + "]";
+	}
+
 	private String dni_a;
 	private String id_c;
 	private String categoria;

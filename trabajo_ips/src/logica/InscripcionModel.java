@@ -15,7 +15,7 @@ public class InscripcionModel
 	
 public static String sql1 = "select * from inscripcion";
 public static String sql2 = "select * from inscripcion where inscripcion.email=?";
-
+public static String sql3 = "insert into inscripcion values ('58o',?,'juvenil',?,'07/04/2022','efectivo',340,9,1)";
 	
 	public List<InscripcionDto> getInscripciones() throws SQLException
 	{
@@ -48,7 +48,7 @@ public static String sql2 = "select * from inscripcion where inscripcion.email=?
         }
 
         for (InscripcionDto atletaDto : listaInscrpcines) {
-			System.out.println(atletaDto.getEmail()
+			System.out.println(atletaDto
 			);
 		}
         return listaInscrpcines;
@@ -99,6 +99,43 @@ public static String sql2 = "select * from inscripcion where inscripcion.email=?
         
         if (listaAtletas.size()>0) return true;
         else return false;
+	}
+
+	
+	public void agregarInscripcion(String text, int id)
+	{
+		try {
+			agregarParticipante(text, id);
+		} catch (SQLException e) {
+			System.out.println("no se pudo añadir -- inscripcion model");
+			e.printStackTrace();
+		}
+	}
+	
+
+	private void agregarParticipante(String text, int id) throws SQLException {
+		// Conexión a la base de datos
+        Connection c = null;
+        PreparedStatement pst = null;
+//        ResultSet rs = null;
+        try {
+            c = BaseDatos.getConnection();
+            pst = c.prepareStatement(sql3);
+            pst.setInt(1, id);
+            pst.setString(2, text);
+           
+             
+            pst.executeUpdate();
+
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+
+
+            pst.close();
+            c.close();
+        }
 	}
 
 }

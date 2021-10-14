@@ -12,6 +12,8 @@ public class Main {
 	{
 		new CompeticionModel().getCompeticionesArray();
 		new InscripcionModel().getInscripciones();
+		new AtletaModel().getAtletas();
+		System.out.println();
 		new AtletaModel().atletaAlredyRegistred("natalia@email.com", "Cross de Tineo");
 		
 	}

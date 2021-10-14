@@ -128,19 +128,26 @@ public class VentanaInscripción extends JFrame {
 			btnValidar = new JButton("Validar");
 			btnValidar.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					if (camposCorrectos())
+					if (txtEmail.getText()=="")
+					{
+						System.out.println("q cojones");
+						mostrarErrorVacio();
+					}
+					else if (!yaRegistradoEnlaCarrera())
 					{
 						txtJustificante.setText("ok");
 						txtJustificante.setEnabled(true);
 						lblInfoJus.setVisible(true);
-					}
-					else 
+						inscribirParticipante();
+					} else if (yaRegistradoEnlaCarrera())
 					{
-						if (txtEmail.getText()=="")
-							mostrarErrorVacio();
-						else
-							mostrarErrorNoRegis();
+						mostrarErrorYaRegistrado();
 					}
+					else if (!haySuficientesPlazas())
+					{
+						mostrarErrorPlazas();
+					}
+							
 				}
 			});
 			btnValidar.setFont(new Font("Tahoma", Font.PLAIN, 13));
@@ -150,19 +157,44 @@ public class VentanaInscripción extends JFrame {
 		return btnValidar;
 	}
 	
+	protected void inscribirParticipante() {
+		CompeticionDto c = (CompeticionDto) comboBox.getSelectedItem();
+		System.out.println(txtEmail.getText());
+		System.out.println(c.getId());
+
+		ins.agregarInscripcion(txtEmail.getText(),c.getId());
+	}
+
+	protected boolean haySuficientesPlazas() {
+		CompeticionDto c = (CompeticionDto) comboBox.getSelectedItem();
+		int plazas=c.getNum_plazas();
+		if (plazas>0) return true;
+		else return false;
+	}
+
+	protected void mostrarErrorPlazas() {
+		JOptionPane.showMessageDialog(this, "No hay plazas disponibles,lo sentimos");
+		
+	}
+
+	protected void mostrarErrorYaRegistrado() {
+		JOptionPane.showMessageDialog(this, "Ya te has inscrito en esta carrera");
+		
+	}
+
+	protected boolean yaRegistradoEnlaCarrera() {
+		String email=txtEmail.getText();
+		CompeticionDto c = (CompeticionDto) comboBox.getSelectedItem();
+		String nombre = c.getNombre();
+		return atl.atletaAlredyRegistred(email, nombre);
+	}
+
 	protected void mostrarErrorVacio() {
 		// TODO Auto-generated method stub
 		JOptionPane.showMessageDialog(this, "El campo email no puede estar vacío");
 	}
 
-	protected void mostrarErrorNoRegis() {
-		JOptionPane.showMessageDialog(this, "Tu email todavía no ha sido registrado");
-	}
-
-	protected boolean camposCorrectos() {
-		String email = txtEmail.getText();
-		return ins.isEmailRegistred(email);
-	}
+	
 
 	private TextField getTxtJustificante() {
 		if (txtJustificante == null) {
