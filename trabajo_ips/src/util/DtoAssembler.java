@@ -1,8 +1,12 @@
 package util;
 
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import logica.AtletaDto;
@@ -99,7 +103,7 @@ public class DtoAssembler {
 		return cogerDatosAtleta(rs);
 	}
 	
-	public static List<CompeticionDto> toCompeticionDtoListPorFecha (ResultSet rs,String fecha)
+	public static List<CompeticionDto> toCompeticionDtoListPorFecha (ResultSet rs,String fecha) throws ParseException 
 	{
 		List<CompeticionDto> lista = new ArrayList<CompeticionDto>();
 		try {
@@ -115,25 +119,49 @@ public class DtoAssembler {
 		return lista;
 	}
 	
-	private static boolean compararFecha(String ffin, String fecha,String fechaInicio) {
+	private static boolean compararFecha(String ffin, String fecha,String fechaInicio) throws ParseException{
 		String[] fechaFin = ffin.split("/");
 		String[] fechaAcomparar = fecha.split("/");
 		String[] fInicio = fechaInicio.split("/");
-		for (int i = 0; i < fechaAcomparar.length; i++) {
-			System.out.println(fechaAcomparar[i]);
-		}
-		if(Integer.parseInt(fechaFin[2]) < Integer.parseInt(fechaAcomparar[2]) || Integer.parseInt(fInicio[2]) > Integer.parseInt(fechaAcomparar[2])) {
+		SimpleDateFormat formato =new SimpleDateFormat("dd/MM/yyyy");
+		
+		Date fechaFin2 = formato.parse(ffin);
+
+		Date fecha2 = formato.parse(fecha);
+		
+		Date fechaI2 = formato.parse(fechaInicio);
+		
+		if (fechaFin2.before(fecha2)) {
 			return false;
-		}else {
-			if (Integer.parseInt(fechaFin[1]) < Integer.parseInt(fechaAcomparar[1]) || Integer.parseInt(fInicio[1]) > Integer.parseInt(fechaAcomparar[1])) {
-				return false;
-			}else {
-				if (Integer.parseInt(fechaFin[0]) < Integer.parseInt(fechaAcomparar[0]) || Integer.parseInt(fInicio[0]) > Integer.parseInt(fechaAcomparar[0])) {
-					return false;
-				}
-			}
 		}
+		if (fecha2.before(fechaI2))  {
+			return false;
+		}
+//		if(Integer.parseInt(fechaFin[2]) < Integer.parseInt(fechaAcomparar[2]) ) {
+//			return false;
+//		}else {
+//			if (Integer.parseInt(fechaFin[1]) < Integer.parseInt(fechaAcomparar[1])) {
+//				return false;
+//			}else {
+//				if (Integer.parseInt(fechaFin[0]) < Integer.parseInt(fechaAcomparar[0])) {
+//					return false;
+//				}
+//			}
+//		}
+//		if  (Integer.parseInt(fInicio[2]) > Integer.parseInt(fechaAcomparar[2])) {
+//			return false;
+//		}else {
+//			if (Integer.parseInt(fInicio[1]) > Integer.parseInt(fechaAcomparar[1])) {
+//				return false;
+//			}else {
+//				if (Integer.parseInt(fInicio[0]) > Integer.parseInt(fechaAcomparar[0])) {
+//					return false;
+//				}
+//			}
+//		}
 		return true;
+		
+
 	}
 	
 }

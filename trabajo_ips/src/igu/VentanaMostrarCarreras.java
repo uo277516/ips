@@ -5,22 +5,27 @@ import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
+import java.text.ParseException;
 import java.time.LocalDate;
+import java.util.List;
 
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
 
 import logica.AtletaModel;
 import logica.CompeticionDto;
 import logica.CompeticionModel;
 import logica.InscripcionModel;
-import javax.swing.JLabel;
 
 public class VentanaMostrarCarreras extends JFrame {
 
@@ -30,16 +35,17 @@ public class VentanaMostrarCarreras extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextArea txtInfo;
-	private JComboBox<CompeticionDto> cmboxCarreras;
 	private JTextField textFecha;
 	private InscripcionModel ins;
 	private AtletaModel atl;
 	private CompeticionModel comp;
 	private JButton btnAceptar;
 	private JLabel lblCompeticiones;
+	private JScrollPane scrollPane;
+	private JTable table;
 
 	/**
-	 * Launch the application.eqwewqyyui
+	 * Launch the application.
 	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -56,24 +62,25 @@ public class VentanaMostrarCarreras extends JFrame {
 	
 	/**
 	 * Create the frame.
+	 * @throws ParseException 
 	 */
-	public VentanaMostrarCarreras() {
+	public VentanaMostrarCarreras() throws ParseException {
 		ins = new InscripcionModel();
 		atl = new AtletaModel();
 		comp = new CompeticionModel();
 		setTitle("Selecci\u00F3n de Competici\u00F3n:");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 538, 348);
+		setBounds(100, 100, 688, 503);
 		contentPane = new JPanel();
 		contentPane.setBackground(Color.WHITE);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		contentPane.add(getTxtInfo());
-		contentPane.add(getCmboxCarreras());
 		contentPane.add(getTextFecha());
 		contentPane.add(getBtnAceptar());
 		contentPane.add(getLblCompeticiones());
+		contentPane.add(getScrollPane());
 	}
 	
 	/**
@@ -109,19 +116,11 @@ public class VentanaMostrarCarreras extends JFrame {
 	private JTextArea getTxtInfo() {
 		if (txtInfo == null) {
 			txtInfo = new JTextArea();
-			txtInfo.setText("Se muestra: \r\nNombre---fecha competici\u00F3n---tipo---distancia---cuota---fecha fin inscripci\u00F3n\r\n---numero de plazas disponibles");
+			txtInfo.setText("Se muestra: \r\nNombre---fecha competici\u00F3n---tipo---distancia---cuota---fecha fin inscripci\u00F3n---numero de plazas disponibles");
 			txtInfo.setFont(new Font("Tahoma", Font.PLAIN, 11));
-			txtInfo.setBounds(24, 72, 420, 54);
+			txtInfo.setBounds(24, 83, 642, 54);
 		}
 		return txtInfo;
-	}
-	private JComboBox<CompeticionDto> getCmboxCarreras() {
-		if (cmboxCarreras == null) {
-			cmboxCarreras = new JComboBox<CompeticionDto>();
-			cmboxCarreras.setBounds(24, 139, 485, 22);
-			cmboxCarreras.setModel(new DefaultComboBoxModel<CompeticionDto>(comp.getCompetcionesFecha(cambiarFormatoFecha())));
-		}
-		return cmboxCarreras;
 	}
 	private JTextField getTextFecha() {
 		if (textFecha == null) {
@@ -150,21 +149,36 @@ public class VentanaMostrarCarreras extends JFrame {
 			btnAceptar = new JButton("Siguiente");
 			btnAceptar.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					pasarAInscripcion();
+					try {
+						pasarAInscripcion();
+					} catch (SQLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 				}
 			});
 			btnAceptar.setBackground(Color.GREEN);
 			btnAceptar.setForeground(Color.WHITE);
 			btnAceptar.setFont(new Font("Tahoma", Font.PLAIN, 14));
-			btnAceptar.setBounds(393, 275, 119, 23);
+			btnAceptar.setBounds(547, 430, 119, 23);
 		}
 		return btnAceptar;
 	}
-	protected void pasarAInscripcion() {
+	protected void pasarAInscripcion() throws SQLException {
 		this.dispose();
-		VentanaInscripción vPal = new VentanaInscripción(this, (CompeticionDto) cmboxCarreras.getSelectedItem());
+		CompeticionDto competicion = crearCompeticion();
+		VentanaInscripción vPal = new VentanaInscripción(this, competicion);
 		vPal.setLocationRelativeTo(this);
 		vPal.setVisible(true);
+	}
+
+	private CompeticionDto crearCompeticion() throws SQLException {
+		int fila = table.getSelectedRow();
+		String identificador = (String) table.getValueAt(fila,0);
+		System.out.println(identificador);
+		List<CompeticionDto> compe = comp.getCompeticionById(identificador);
+		// TODO Auto-generated method stub
+		return compe.get(0);
 	}
 
 	private JLabel getLblCompeticiones() {
@@ -175,4 +189,41 @@ public class VentanaMostrarCarreras extends JFrame {
 		}
 		return lblCompeticiones;
 	}
+	private JScrollPane getScrollPane() throws ParseException {
+		if (scrollPane == null) {
+			scrollPane = new JScrollPane();
+			scrollPane.setBounds(10, 148, 656, 271);
+			scrollPane.setViewportView(getTable());
+		}
+		return scrollPane;
+	}
+	private JTable getTable() throws ParseException {
+		if (table == null) {
+			table = new JTable();
+			table.setBorder(UIManager.getBorder("Table.scrollPaneBorder"));
+			table.setFont(new Font("Tahoma", Font.PLAIN, 13));
+			table.setSelectionBackground(Color.YELLOW);
+			table.setBackground(Color.LIGHT_GRAY);
+			DefaultTableModel modelo = new DefaultTableModel();
+			table.setModel(modelo);
+			modelo.addColumn("Iden");modelo.addColumn("Nombre");modelo.addColumn("Fecha Comp");modelo.addColumn("Tipo");modelo.addColumn("Distancia");modelo.addColumn("Cuota");modelo.addColumn("Fecha Fin Insc");modelo.addColumn("Plazas");
+			List<CompeticionDto> competiciones = comp.getCompetcionesFechaLista(textFecha.getText());
+			String[][] info = new String[competiciones.size()][8];
+			//List<AtletaDto> atletas = getAtletas();
+			//List<InscripcionDto> inscripciones = getInscripciones();
+			
+			for(int i = 0; i < competiciones.size(); i++) {
+				info[i][0] = String.valueOf(competiciones.get(i).getId());
+				info[i][1] = competiciones.get(i).getNombre();info[i][2] = competiciones.get(i).getF_comp();
+				info[i][3] = competiciones.get(i).getTipo();info[i][4] = competiciones.get(i).getDistancia()+"km";
+				info[i][5] = String.valueOf(competiciones.get(i).getCuota())+"\u20AC";info[i][6] = competiciones.get(i).getF_fin();
+				info[i][7] = String.valueOf(competiciones.get(i).getNum_plazas());
+				modelo.addRow(info[i]);
+			}
+		}
+		
+		return table;
+	}
+	
+	
 }
