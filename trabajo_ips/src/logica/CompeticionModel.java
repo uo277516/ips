@@ -78,7 +78,7 @@ public class CompeticionModel
 		return articulos;
 	}
 	
-	public List<CompeticionDto> getCompetcionesFechaLista(String fecha) throws ParseException {
+	public List<CompeticionDto> getCompetcionesFechaLista(String fecha){
 		List<CompeticionDto> articulos = null;
 		try {
 			articulos = filtrarPorFecha(fecha);
@@ -89,7 +89,7 @@ public class CompeticionModel
 		return articulos;
 	}
 
-	private List<CompeticionDto> filtrarPorFecha(String fecha) throws SQLException, ParseException{
+	private List<CompeticionDto> filtrarPorFecha(String fecha) throws SQLException{
 		List<CompeticionDto> listaCompeticiones = new ArrayList<CompeticionDto>();
 
         // Conexión a la base de datos

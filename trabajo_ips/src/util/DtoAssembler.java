@@ -103,14 +103,19 @@ public class DtoAssembler {
 		return cogerDatosAtleta(rs);
 	}
 	
-	public static List<CompeticionDto> toCompeticionDtoListPorFecha (ResultSet rs,String fecha) throws ParseException 
+	public static List<CompeticionDto> toCompeticionDtoListPorFecha (ResultSet rs,String fecha) 
 	{
 		List<CompeticionDto> lista = new ArrayList<CompeticionDto>();
 		try {
 			while(rs.next())
 			{
-				if (compararFecha(rs.getString("f_fin"),fecha,rs.getString("f_inicio")))
-					lista.add(cogerDatosCompeticion(rs));
+				try {
+					if (compararFecha(rs.getString("f_fin"),fecha,rs.getString("f_inicio")))
+						lista.add(cogerDatosCompeticion(rs));
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block

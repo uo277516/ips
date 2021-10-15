@@ -64,7 +64,7 @@ public class VentanaMostrarCarreras extends JFrame {
 	 * Create the frame.
 	 * @throws ParseException 
 	 */
-	public VentanaMostrarCarreras() throws ParseException {
+	public VentanaMostrarCarreras() {
 		ins = new InscripcionModel();
 		atl = new AtletaModel();
 		comp = new CompeticionModel();
@@ -189,7 +189,7 @@ public class VentanaMostrarCarreras extends JFrame {
 		}
 		return lblCompeticiones;
 	}
-	private JScrollPane getScrollPane() throws ParseException {
+	private JScrollPane getScrollPane(){
 		if (scrollPane == null) {
 			scrollPane = new JScrollPane();
 			scrollPane.setBounds(10, 148, 656, 271);
@@ -197,7 +197,7 @@ public class VentanaMostrarCarreras extends JFrame {
 		}
 		return scrollPane;
 	}
-	private JTable getTable() throws ParseException {
+	private JTable getTable() {
 		if (table == null) {
 			table = new JTable();
 			table.setBorder(UIManager.getBorder("Table.scrollPaneBorder"));
