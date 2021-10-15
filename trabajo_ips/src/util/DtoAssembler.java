@@ -137,28 +137,7 @@ public class DtoAssembler {
 		if (fecha2.before(fechaI2))  {
 			return false;
 		}
-//		if(Integer.parseInt(fechaFin[2]) < Integer.parseInt(fechaAcomparar[2]) ) {
-//			return false;
-//		}else {
-//			if (Integer.parseInt(fechaFin[1]) < Integer.parseInt(fechaAcomparar[1])) {
-//				return false;
-//			}else {
-//				if (Integer.parseInt(fechaFin[0]) < Integer.parseInt(fechaAcomparar[0])) {
-//					return false;
-//				}
-//			}
-//		}
-//		if  (Integer.parseInt(fInicio[2]) > Integer.parseInt(fechaAcomparar[2])) {
-//			return false;
-//		}else {
-//			if (Integer.parseInt(fInicio[1]) > Integer.parseInt(fechaAcomparar[1])) {
-//				return false;
-//			}else {
-//				if (Integer.parseInt(fInicio[0]) > Integer.parseInt(fechaAcomparar[0])) {
-//					return false;
-//				}
-//			}
-//		}
+
 		return true;
 		
 
