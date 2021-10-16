@@ -13,6 +13,7 @@ import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -116,8 +117,8 @@ public class VentanaMostrarCarreras extends JFrame {
 	private JTextArea getTxtInfo() {
 		if (txtInfo == null) {
 			txtInfo = new JTextArea();
-			txtInfo.setText("Se muestra: \r\nNombre---fecha competici\u00F3n---tipo---distancia---cuota---fecha fin inscripci\u00F3n---numero de plazas disponibles");
-			txtInfo.setFont(new Font("Tahoma", Font.PLAIN, 11));
+			txtInfo.setText("Se muestra: \r\nNombre---fecha competici\u00F3n---tipo---distancia---cuota---fecha fin inscripci\u00F3n---numero de plazas");
+			txtInfo.setFont(new Font("Tahoma", Font.PLAIN, 14));
 			txtInfo.setBounds(24, 83, 642, 54);
 		}
 		return txtInfo;
@@ -125,8 +126,9 @@ public class VentanaMostrarCarreras extends JFrame {
 	private JTextField getTextFecha() {
 		if (textFecha == null) {
 			textFecha = new JTextField();
+			textFecha.setFont(new Font("Tahoma", Font.PLAIN, 14));
 			textFecha.setEditable(false);
-			textFecha.setBounds(241, 22, 86, 20);
+			textFecha.setBounds(312, 26, 86, 29);
 			textFecha.setColumns(10);
 			textFecha.setText(cambiarFormatoFecha());
 			//cambiarFormatoFecha();
@@ -150,7 +152,11 @@ public class VentanaMostrarCarreras extends JFrame {
 			btnAceptar.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					try {
-						pasarAInscripcion();
+						if (table.getSelectedRow() != -1) {
+							pasarAInscripcion();
+						}else {
+							JOptionPane.showMessageDialog(null, "Error: Seleccione una carrera para registrarse");
+						}
 					} catch (SQLException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
@@ -184,8 +190,8 @@ public class VentanaMostrarCarreras extends JFrame {
 	private JLabel getLblCompeticiones() {
 		if (lblCompeticiones == null) {
 			lblCompeticiones = new JLabel("Competiciones abiertas actualmente a d\u00EDa:");
-			lblCompeticiones.setFont(new Font("Tahoma", Font.PLAIN, 11));
-			lblCompeticiones.setBounds(24, 28, 223, 13);
+			lblCompeticiones.setFont(new Font("Tahoma", Font.PLAIN, 14));
+			lblCompeticiones.setBounds(24, 32, 278, 13);
 		}
 		return lblCompeticiones;
 	}

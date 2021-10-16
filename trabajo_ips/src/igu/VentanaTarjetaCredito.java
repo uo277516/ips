@@ -1,21 +1,30 @@
 package igu;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Font;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.JTextArea;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.JButton;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.EtchedBorder;
+import javax.swing.border.TitledBorder;
 
+import logica.AtletaDto;
+import logica.AtletaModel;
+import logica.CompeticionDto;
+import logica.CompeticionModel;
+import logica.InscripcionDto;
+import logica.InscripcionModel;
+
+@SuppressWarnings("serial")
 public class VentanaTarjetaCredito extends JFrame {
 
 	private JPanel contentPane;
@@ -29,6 +38,17 @@ public class VentanaTarjetaCredito extends JFrame {
 	private JButton btnValidar;
 	private JLabel lblFormato;
 	private JLabel lblInfo;
+	private JPanel panel;
+	private JLabel lblJusti;
+	private JTextArea textArea_1;
+	private JButton btnFinalizar;
+	private VentanaInscripción vi;
+	private AtletaDto atleta;
+	private CompeticionDto competicion;
+	private InscripcionDto inscripcion;
+	private AtletaModel atl;
+	private CompeticionModel comp;
+	private InscripcionModel ins;
 
 	/**
 	 * Launch the application.
@@ -49,7 +69,13 @@ public class VentanaTarjetaCredito extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public VentanaTarjetaCredito() {
+	public VentanaTarjetaCredito(VentanaInscripción vi, CompeticionDto cDto, AtletaDto aDto) {
+		this.vi=vi;
+		this.competicion=cDto;
+		this.atleta=aDto;
+		ins = new InscripcionModel();
+		atl = new AtletaModel();
+		comp = new CompeticionModel();
 		setTitle("Pago con tarjeta de cr\u00E9dito:");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 700, 488);
@@ -69,12 +95,31 @@ public class VentanaTarjetaCredito extends JFrame {
 		contentPane.add(getLblFormato());
 		contentPane.add(getLblInfo());
 	}
+	
+	public VentanaTarjetaCredito() {
+		ins = new InscripcionModel();
+		atl = new AtletaModel();
+		comp = new CompeticionModel();
+		setTitle("Pago con tarjeta de cr\u00E9dito:");
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 691, 737);
+		contentPane = new JPanel();
+		contentPane.setBackground(Color.WHITE);
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+		contentPane.add(getTextArea());
+		contentPane.add(getPanel());
+		contentPane.add(getLblJusti());
+		contentPane.add(getTextArea_1());
+		contentPane.add(getBtnFinalizar());
+	}
 
 	private JTextArea getTextArea() {
 		if (textArea == null) {
 			textArea = new JTextArea();
 			textArea.setEditable(false);
-			textArea.setFont(new Font("Tahoma", Font.PLAIN, 14));
+			textArea.setFont(new Font("Tahoma", Font.PLAIN, 13));
 			textArea.setText("Para realizar el pago mediante tarjeta de cr\u00E9dito necesita registrar los datos de esta. \r\nUna vez validados, se emitir\u00E1 un justificante de pago realizado y pasar\u00E1 a estado inscrito en la\r\ncompeteci\u00F3n.");
 			textArea.setBounds(27, 21, 634, 58);
 		}
@@ -83,25 +128,16 @@ public class VentanaTarjetaCredito extends JFrame {
 	private JLabel getLblNumero() {
 		if (lblNumero == null) {
 			lblNumero = new JLabel("N\u00FAmero Tarjeta:");
-			lblNumero.setFont(new Font("Tahoma", Font.PLAIN, 14));
-			lblNumero.setBounds(27, 120, 114, 23);
+			lblNumero.setBounds(21, 33, 114, 23);
+			lblNumero.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		}
 		return lblNumero;
 	}
 	private JTextField getTxtNumero() {
 		if (txtNumero == null) {
 			txtNumero = new JTextField();
-			txtNumero.addFocusListener(new FocusAdapter() {
-				@Override
-				public void focusLost(FocusEvent e) {
-					if (!compruebaSoloNumeros(txtNumero.getText())) {
-							JOptionPane.showMessageDialog(null, "Formato introducido incorrecto: Solo números porfavor");
-							txtNumero.setText("");
-					}
-				}
-			});
-			txtNumero.setFont(new Font("Tahoma", Font.PLAIN, 12));
-			txtNumero.setBounds(183, 117, 418, 31);
+			txtNumero.setBounds(177, 30, 418, 31);
+			txtNumero.setFont(new Font("Tahoma", Font.PLAIN, 13));
 			txtNumero.setColumns(10);
 		}
 		return txtNumero;
@@ -163,32 +199,24 @@ public class VentanaTarjetaCredito extends JFrame {
 	private JLabel getLblFecha() {
 		if (lblFecha == null) {
 			lblFecha = new JLabel("Fecha de Caducidad:");
-			lblFecha.setFont(new Font("Tahoma", Font.PLAIN, 14));
-			lblFecha.setBounds(27, 181, 131, 23);
+			lblFecha.setBounds(21, 94, 131, 23);
+			lblFecha.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		}
 		return lblFecha;
 	}
 	private JLabel getLblCvc() {
 		if (lblCvc == null) {
 			lblCvc = new JLabel("CVC:");
-			lblCvc.setFont(new Font("Tahoma", Font.PLAIN, 14));
-			lblCvc.setBounds(27, 251, 67, 23);
+			lblCvc.setBounds(21, 164, 67, 23);
+			lblCvc.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		}
 		return lblCvc;
 	}
 	private JTextField getTxtFecha() {
 		if (txtFecha == null) {
 			txtFecha = new JTextField();
-			txtFecha.addFocusListener(new FocusAdapter() {
-				@Override
-				public void focusLost(FocusEvent e) {
-					if (!soloNumerosFecha(txtFecha.getText())) {
-						JOptionPane.showMessageDialog(null, "Formato introducido incorrecto");
-						txtFecha.setText("");
-					}
-				}
-			});
-			txtFecha.setBounds(183, 179, 173, 31);
+			txtFecha.setFont(new Font("Tahoma", Font.PLAIN, 13));
+			txtFecha.setBounds(177, 92, 173, 31);
 			txtFecha.setColumns(10);
 		}
 		return txtFecha;
@@ -196,18 +224,8 @@ public class VentanaTarjetaCredito extends JFrame {
 	private JTextField getTxtCvc() {
 		if (txtCvc == null) {
 			txtCvc = new JTextField();
-			txtCvc.addFocusListener(new FocusAdapter() {
-				@Override
-				public void focusLost(FocusEvent e) {
-					if (!soloNumeros3(txtCvc.getText())) {
-						JOptionPane.showMessageDialog(null, "Formato introducido incorrecto");
-						txtCvc.setText("");
-					}
-				}
-
-				
-			});
-			txtCvc.setBounds(104, 249, 173, 31);
+			txtCvc.setFont(new Font("Tahoma", Font.PLAIN, 13));
+			txtCvc.setBounds(98, 162, 173, 31);
 			txtCvc.setColumns(10);
 		}
 		return txtCvc;
@@ -235,28 +253,121 @@ public class VentanaTarjetaCredito extends JFrame {
 	private JButton getBtnValidar() {
 		if (btnValidar == null) {
 			btnValidar = new JButton("Validar");
+			btnValidar.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					if (txtNumero.getText().equals("") && txtFecha.getText().equals("") && txtCvc.getText().equals("")) {
+						mostrarMensajeVacio();
+					}else {
+						if (!compruebaSoloNumeros(txtNumero.getText())) {
+							mostrarErrorNumero();
+							txtNumero.setText("");
+						}else if(!soloNumerosFecha(txtFecha.getText())) {
+							mostrarErrorFecha();
+							txtFecha.setText(""); 
+							
+						}else if(!soloNumeros3(txtCvc.getText())) {
+							mostrarErrorCvc();
+							txtCvc.setText("");
+						}else {
+							pagarInscripcion();
+						}
+						
+					}
+				
+				}
+			});
+			btnValidar.setBounds(506, 198, 89, 31);
 			btnValidar.setForeground(Color.WHITE);
 			btnValidar.setBackground(Color.GREEN);
-			btnValidar.setFont(new Font("Tahoma", Font.PLAIN, 18));
-			btnValidar.setBounds(512, 303, 89, 31);
+			btnValidar.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		}
 		return btnValidar;
 	}
+	private void pagarInscripcion() {
+		inscripcion = ins.findInsByDniId(atleta.getDni(), String.valueOf(competicion.getId()));
+		
+		
+	}
+
+	private void mostrarErrorCvc() {
+		JOptionPane.showMessageDialog(this, "Error: CVC introducido incorrecto");
+		
+	}
+
+	private void mostrarErrorFecha() {
+		JOptionPane.showMessageDialog(this, "Error: Formato fecha introducido incorrecto");
+		
+	}
+
+	private void mostrarErrorNumero() {
+		JOptionPane.showMessageDialog(this, "Error: Formato introducido incorrecto: Solo números porfavor");
+		
+	}
+
+	private void mostrarMensajeVacio() {
+		JOptionPane.showMessageDialog(this, "Error: Campos vacios");
+		
+	}
+
 	private JLabel getLblFormato() {
 		if (lblFormato == null) {
 			lblFormato = new JLabel("dd/MM/aaaa");
-			lblFormato.setFont(new Font("Tahoma", Font.PLAIN, 14));
-			lblFormato.setBounds(391, 181, 95, 23);
+			lblFormato.setBounds(385, 94, 95, 23);
+			lblFormato.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		}
 		return lblFormato;
 	}
 	private JLabel getLblInfo() {
 		if (lblInfo == null) {
 			lblInfo = new JLabel("C\u00F3digo de 3 d\u00EDgitos que aparece en la parte trasera de la tarjeta.");
+			lblInfo.setBounds(281, 164, 374, 23);
 			lblInfo.setFont(new Font("Tahoma", Font.PLAIN, 11));
-			lblInfo.setBounds(287, 251, 374, 23);
-			contentPane.add(lblInfo);
 		}
 		return lblInfo;
+	}
+	private JPanel getPanel() {
+		if (panel == null) {
+			panel = new JPanel();
+			panel.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "Datos Tarjeta:", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+			panel.setBackground(Color.WHITE);
+			panel.setBounds(27, 111, 624, 245);
+			panel.setLayout(null);
+			panel.add(getLblNumero());
+			panel.add(getTxtNumero());
+			panel.add(getTxtFecha());
+			panel.add(getLblFecha());
+			panel.add(getLblFormato());
+			panel.add(getLblCvc());
+			panel.add(getTxtCvc());
+			panel.add(getLblInfo());
+			panel.add(getBtnValidar());
+		}
+		return panel;
+	}
+	private JLabel getLblJusti() {
+		if (lblJusti == null) {
+			lblJusti = new JLabel("Justificante de pago:");
+			lblJusti.setFont(new Font("Tahoma", Font.PLAIN, 13));
+			lblJusti.setBounds(27, 395, 140, 21);
+		}
+		return lblJusti;
+	}
+	private JTextArea getTextArea_1() {
+		if (textArea_1 == null) {
+			textArea_1 = new JTextArea();
+			textArea_1.setEditable(false);
+			textArea_1.setBounds(27, 428, 481, 206);
+		}
+		return textArea_1;
+	}
+	private JButton getBtnFinalizar() {
+		if (btnFinalizar == null) {
+			btnFinalizar = new JButton("Finalizar");
+			btnFinalizar.setFont(new Font("Tahoma", Font.PLAIN, 14));
+			btnFinalizar.setForeground(Color.WHITE);
+			btnFinalizar.setBackground(Color.RED);
+			btnFinalizar.setBounds(562, 643, 89, 23);
+		}
+		return btnFinalizar;
 	}
 }

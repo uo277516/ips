@@ -84,6 +84,11 @@ public class DtoAssembler {
 		}
 		return lista;
 	}
+	
+	public static InscripcionDto toInscripcionDto(ResultSet rs) throws SQLException {
+		
+		return cogerDatosInscripcion(rs);
+	}
 
 	private static InscripcionDto cogerDatosInscripcion(ResultSet rs) throws SQLException {
 		InscripcionDto i = new InscripcionDto();

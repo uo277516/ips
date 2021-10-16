@@ -18,6 +18,7 @@ public static String sql2 = "select * from inscripcion where inscripcion.email=?
 public static String sql3 = "insert into inscripcion (dni_a, id_c, email, estado,cantidad_pagada,fecha) values (?,?,?,'Pre-inscrito',?,?)";
 public static String sql4 = "select * from atleta where atleta.email=?";
 public static String sql5DniAtleta = "select dni_a from inscripcion where email=? and id_c =?";
+public static String sql6Ins = "select * from inscripcion where dni_a=? and id_c =?";
 
 
 
@@ -50,6 +51,44 @@ public static String sql5DniAtleta = "select dni_a from inscripcion where email=
             rs.next();
             
             a = DtoAssembler.toAtletaDto(rs);
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            rs.close();
+            pst.close();
+            c.close();
+        }
+        return a;
+	}
+	
+	public InscripcionDto findInsByDniId(String dni_a,String id_c) {
+		InscripcionDto ins = null;
+		try {
+			ins= findInsByDniIdP(dni_a, id_c);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return ins;
+	}
+	
+	private InscripcionDto findInsByDniIdP(String dni_a,String id_c) throws SQLException 
+	{
+		InscripcionDto a = null;
+		Connection c = null;
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        try {
+            c = BaseDatos.getConnection();
+            pst = c.prepareStatement(sql6Ins);
+            pst.setString(1, dni_a);
+            pst.setString(2, id_c);
+            //System.out.println(pst);
+            rs = pst.executeQuery();
+            rs.next();
+            
+            a = DtoAssembler.toInscripcionDto(rs);
 
         } catch (SQLException e) {
             throw new RuntimeException(e);

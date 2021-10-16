@@ -20,7 +20,7 @@ public class AtletaModel
 			+ "     inscripcion.id_c = competicion.id and "
 			+ "		inscripcion.email=? and "
 			+ "     competicion.nombre=?";
-	
+	public static String sql3 = "select * from atleta where atleta.email=?";
 	
 	
 	public List<AtletaDto> getAtletas() throws SQLException
@@ -116,6 +116,52 @@ public class AtletaModel
         	System.out.println("no registrado, puede registrarse");
         	return false;
         }
+	}
+
+
+	public boolean atletaEnBase(String email)
+	{
+		boolean op=false;
+		try {
+			 op=atletaEnBaseP(email);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return op;
+	}
+
+	public boolean atletaEnBaseP(String email) throws SQLException {
+		boolean op=false;
+		// Conexión a la base de datos
+        Connection c = null;
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        try {
+            c = BaseDatos.getConnection();
+            pst = c.prepareStatement(sql3);
+            pst.setString(1, email);
+            rs = pst.executeQuery();
+
+            
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+        	if (rs==null)
+        	{
+        		op=false;
+        	}
+        	else 
+        	{
+        		rs.close();
+        		op=true;
+        	}
+            
+            pst.close();
+            c.close();
+        }
+        return op;
 	}
 
 
