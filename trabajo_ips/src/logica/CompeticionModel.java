@@ -14,6 +14,8 @@ public class CompeticionModel
 {
 	
 	public static String sql1 = "select * from competicion";
+	public static String sql2ById = "select * from competicion where id=?";
+
 	
 	public List<CompeticionDto> getCompeticiones() throws SQLException
 	{
@@ -75,6 +77,17 @@ public class CompeticionModel
 		}
 		return articulos;
 	}
+	
+	public List<CompeticionDto> getCompetcionesFechaLista(String fecha){
+		List<CompeticionDto> articulos = null;
+		try {
+			articulos = filtrarPorFecha(fecha);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return articulos;
+	}
 
 	private List<CompeticionDto> filtrarPorFecha(String fecha) throws SQLException {
 		List<CompeticionDto> listaCompeticiones = new ArrayList<CompeticionDto>();
@@ -103,6 +116,37 @@ public class CompeticionModel
 //			System.out.println(atletaDto.getDni() + " " + atletaDto.getF_nac()
 //			);
 //		}
+        return listaCompeticiones;
+	}
+	
+	public List<CompeticionDto> getCompeticionById(String identificador) throws SQLException {
+		List<CompeticionDto> listaCompeticiones = new ArrayList<CompeticionDto>();
+
+        // Conexión a la base de datos
+        Connection c = null;
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        try {
+            c = BaseDatos.getConnection();
+            pst = c.prepareStatement(sql2ById);
+            pst.setInt(1, Integer.parseInt(identificador));
+            rs = pst.executeQuery();
+
+            // Añadimos los pedidos a la lista
+            listaCompeticiones = DtoAssembler.toCompeticionDtoList(rs);
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            rs.close();
+            pst.close();
+            c.close();
+        }
+
+        for (CompeticionDto atletaDto : listaCompeticiones) {
+			System.out.println(atletaDto
+			);
+		}
         return listaCompeticiones;
 	}
 }

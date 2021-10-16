@@ -50,6 +50,9 @@ public class VentanaInscripción extends JFrame {
 	private CompeticionDto cSeleccionada;
 	private VentanaMostrarCarreras vC;
 	private JTextArea textArea;
+	private AtletaDto atleta;
+	private JButton btnSiguiente;
+
 	
 //	/**
 //	 * Launch the application.
@@ -92,6 +95,7 @@ public class VentanaInscripción extends JFrame {
 		contentPane.add(getBtnValidar());
 		contentPane.add(getLblInfoJus());
 		contentPane.add(getTextArea());
+		contentPane.add(getBtnSiguiente());
 	}
 	private JLabel getLblPedir() {
 		if (lblPedir == null) {
@@ -126,14 +130,20 @@ public class VentanaInscripción extends JFrame {
 			btnValidar = new JButton("Validar");
 			btnValidar.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
+					
 					if (txtEmail.getText().equals(""))
 					{
 						mostrarErrorVacio();
+					}
+					else if (noRegistradoElAtleta())
+					{
+						mostrarErrorDatosNoRegistrados();
 					}
 					else if (!yaRegistradoEnlaCarrera())
 					{
 						textArea.setEnabled(true);
 						lblInfoJus.setVisible(true);
+						btnSiguiente.setEnabled(true);
 						inscribirParticipante();
 						textArea.setText(getInformacion());
 					} else if (yaRegistradoEnlaCarrera())
@@ -154,6 +164,14 @@ public class VentanaInscripción extends JFrame {
 		return btnValidar;
 	}
 	
+	protected void mostrarErrorDatosNoRegistrados() {
+		JOptionPane.showMessageDialog(this, "Sus datos todavía no han sido registrados");
+		
+	}
+	protected boolean noRegistradoElAtleta() {
+		if (atl.atletaEnBase(txtEmail.getText())) return false;
+		else return true;
+	}
 	protected void inscribirParticipante() {
 		System.out.println(txtEmail.getText());
 		System.out.println(cSeleccionada.getId());
@@ -198,8 +216,8 @@ public class VentanaInscripción extends JFrame {
 	private String getInformacion() {
 		String s = "";
 		float n = 10.0f+cSeleccionada.getCuota();
-		AtletaDto nombre = ins.findAtletaEmail(txtEmail.getText()); 
-		return s+="Nombre del atleta: " + nombre.getNombre() + "\n" +
+		atleta = ins.findAtletaEmail(txtEmail.getText()); 
+		return s+="Nombre del atleta: " + atleta.getNombre() + "\n" +
 			"Competición: " + cSeleccionada.getNombre() + "\n" +
 			"Categoría: " + "esto lo hace tania:)" + "\n" +
 			"Fecha de inscripción: " + cambiarFormatoFecha() + "\n" +
@@ -232,5 +250,50 @@ public class VentanaInscripción extends JFrame {
 			textArea.setBounds(20, 206, 404, 139);
 		}
 		return textArea;
+	}
+	private JButton getBtnSiguiente() {
+		if (btnSiguiente == null) {
+			btnSiguiente = new JButton("Siguiente");
+			btnSiguiente.setEnabled(false);
+			btnSiguiente.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					int seleccion = JOptionPane.showOptionDialog(
+							   null,
+							   "Método de pago", 
+							   "Seleccione una opción para pagar su inscripción",
+							   JOptionPane.YES_NO_CANCEL_OPTION,
+							   JOptionPane.QUESTION_MESSAGE,
+							   null,    // null para icono por defecto.
+							   new Object[] { "Tarjeta de crédito", "Tranferencia"},   // null para YES, NO y CANCEL
+							   "opcion 1");
+
+							if (seleccion != -1)
+							   System.out.println("seleccionada opcion " + (seleccion + 1));	
+							if (seleccion==0) //tarjeta de credito
+								{
+									mostrarVentanaTarjetaDeCredito();
+								}
+							else if (seleccion==1)
+								{
+									mostrarVentanaTransferencia();
+								}}
+			});
+			btnSiguiente.setBackground(Color.GREEN);
+			btnSiguiente.setForeground(Color.WHITE);
+			btnSiguiente.setFont(new Font("Tahoma", Font.PLAIN, 13));
+			btnSiguiente.setBounds(488, 351, 106, 23);
+		}
+		return btnSiguiente;
+	}
+	protected void mostrarVentanaTransferencia() {
+		// TODO Auto-generated method stub
+		
+	}
+	protected void mostrarVentanaTarjetaDeCredito() {
+		this.dispose();
+		//CompeticionDto competicion = crearCompeticion();
+		VentanaTarjetaCredito vPal = new VentanaTarjetaCredito(this, cSeleccionada, atleta);
+		vPal.setLocationRelativeTo(this);
+		vPal.setVisible(true);
 	}
 }
