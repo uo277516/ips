@@ -19,6 +19,8 @@ public static String sql3 = "insert into inscripcion (dni_a, id_c, email, estado
 public static String sql4 = "select * from atleta where atleta.email=?";
 public static String sql5DniAtleta = "select dni_a from inscripcion where email=? and id_c =?";
 public static String sql6Ins = "select * from inscripcion where dni_a=? and id_c =?";
+public static String sql7UpdateEstado = "update inscripcion set estado=? where dni_a=? and id_c=?";
+
 
 
 
@@ -62,7 +64,7 @@ public static String sql6Ins = "select * from inscripcion where dni_a=? and id_c
         return a;
 	}
 	
-	public InscripcionDto findInsByDniId(String dni_a,String id_c) {
+	public InscripcionDto findInsByDniId(String dni_a,int id_c) {
 		InscripcionDto ins = null;
 		try {
 			ins= findInsByDniIdP(dni_a, id_c);
@@ -73,7 +75,7 @@ public static String sql6Ins = "select * from inscripcion where dni_a=? and id_c
 		return ins;
 	}
 	
-	private InscripcionDto findInsByDniIdP(String dni_a,String id_c) throws SQLException 
+	private InscripcionDto findInsByDniIdP(String dni_a,int id_c) throws SQLException 
 	{
 		InscripcionDto a = null;
 		Connection c = null;
@@ -83,7 +85,7 @@ public static String sql6Ins = "select * from inscripcion where dni_a=? and id_c
             c = BaseDatos.getConnection();
             pst = c.prepareStatement(sql6Ins);
             pst.setString(1, dni_a);
-            pst.setString(2, id_c);
+            pst.setInt(2, id_c);
             //System.out.println(pst);
             rs = pst.executeQuery();
             rs.next();
@@ -195,6 +197,39 @@ public static String sql6Ins = "select * from inscripcion where dni_a=? and id_c
 		}
 	}
 	
+	public void actualizarInscripcionEstado(String estado,String dni,int id)
+	{
+		try {
+			actualizarEstado(estado,dni,id);
+		} catch (SQLException e) {
+			System.out.println("no se pudo actuliazar");
+			e.printStackTrace();
+		}
+	}
+	
+
+	private void actualizarEstado(String estado,String dni,int id) throws SQLException {
+		// Conexión a la base de datos
+        Connection c = null;
+        PreparedStatement pst = null;
+//        ResultSet rs = null;
+        try {
+            c = BaseDatos.getConnection();
+            pst = c.prepareStatement(sql7UpdateEstado);
+            pst.setString(1, estado); 
+            pst.setString(2, dni); 
+            pst.setInt(3, id); 
+            pst.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            pst.close();
+            c.close();
+        }
+		
+	}
+
 
 	private void agregarParticipante(String email, int id, float f, String fecha) throws SQLException {
 		AtletaDto a = findAtletaEmail(email);

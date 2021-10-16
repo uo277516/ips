@@ -5,6 +5,7 @@ import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.time.LocalDate;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -23,6 +24,7 @@ import logica.CompeticionDto;
 import logica.CompeticionModel;
 import logica.InscripcionDto;
 import logica.InscripcionModel;
+import javax.swing.JScrollPane;
 
 @SuppressWarnings("serial")
 public class VentanaTarjetaCredito extends JFrame {
@@ -40,7 +42,6 @@ public class VentanaTarjetaCredito extends JFrame {
 	private JLabel lblInfo;
 	private JPanel panel;
 	private JLabel lblJusti;
-	private JTextArea textArea_1;
 	private JButton btnFinalizar;
 	private VentanaInscripción vi;
 	private AtletaDto atleta;
@@ -49,22 +50,10 @@ public class VentanaTarjetaCredito extends JFrame {
 	private AtletaModel atl;
 	private CompeticionModel comp;
 	private InscripcionModel ins;
+	private JScrollPane scrollPane;
+	private JTextArea textAreaJusti;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					VentanaTarjetaCredito frame = new VentanaTarjetaCredito();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+	
 
 	/**
 	 * Create the frame.
@@ -78,31 +67,7 @@ public class VentanaTarjetaCredito extends JFrame {
 		comp = new CompeticionModel();
 		setTitle("Pago con tarjeta de cr\u00E9dito:");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 700, 488);
-		contentPane = new JPanel();
-		contentPane.setBackground(Color.WHITE);
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		setContentPane(contentPane);
-		contentPane.setLayout(null);
-		contentPane.add(getTextArea());
-		contentPane.add(getLblNumero());
-		contentPane.add(getTxtNumero());
-		contentPane.add(getLblFecha());
-		contentPane.add(getLblCvc());
-		contentPane.add(getTxtFecha());
-		contentPane.add(getTxtCvc());
-		contentPane.add(getBtnValidar());
-		contentPane.add(getLblFormato());
-		contentPane.add(getLblInfo());
-	}
-	
-	public VentanaTarjetaCredito() {
-		ins = new InscripcionModel();
-		atl = new AtletaModel();
-		comp = new CompeticionModel();
-		setTitle("Pago con tarjeta de cr\u00E9dito:");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 691, 737);
+		setBounds(100, 100, 691, 671);
 		contentPane = new JPanel();
 		contentPane.setBackground(Color.WHITE);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -111,9 +76,10 @@ public class VentanaTarjetaCredito extends JFrame {
 		contentPane.add(getTextArea());
 		contentPane.add(getPanel());
 		contentPane.add(getLblJusti());
-		contentPane.add(getTextArea_1());
 		contentPane.add(getBtnFinalizar());
+		contentPane.add(getScrollPane());
 	}
+	
 
 	private JTextArea getTextArea() {
 		if (textArea == null) {
@@ -284,8 +250,41 @@ public class VentanaTarjetaCredito extends JFrame {
 		return btnValidar;
 	}
 	private void pagarInscripcion() {
-		inscripcion = ins.findInsByDniId(atleta.getDni(), String.valueOf(competicion.getId()));
+		JOptionPane.showMessageDialog(this, "Pago realizado correctamente, se generará un jsutificante de la operación.");
+		String fechaString = cambiarFormatoFecha();
+		inscripcion = ins.findInsByDniId(atleta.getDni(), competicion.getId());
+		String cadena ="";
+		cadena = 
+		"Datos del Atleta:"+"\n"+ 
+				"\t"+atleta.getNombre() +"\n" +
+				"\tSexo: "+atleta.getSexo()+"\n"
+				+"\tDNI: "+atleta.getDni() + "\n"+
+		"Competeción:"+ "\n" 
+				+"\tNombre: "+ competicion.getNombre()+"\n"+
+				"\tFecha: "+competicion.getF_comp()+"\n"+
+				"\tDistancia: "+ competicion.getCuota() + "\n"+
+		"Cuota: "+competicion.getCuota()+"\n"+
+		"Fecha de pago: "+ fechaString+"\n";
+		textAreaJusti.setText(cadena);
+		consultasUpdate();
 		
+	}
+	
+	private void consultasUpdate() {
+		ins.actualizarInscripcionEstado("Inscrito",atleta.getDni(),competicion.getId());
+		comp.actualizarPlazas(competicion.getId());
+		
+	}
+
+
+	private String cambiarFormatoFecha() {
+		String fechaString = String.valueOf(LocalDate.now());
+		String[] fechaPartida = fechaString.split("-");
+		String result ="";
+		for (int i = 0; i < fechaPartida.length; i++) {
+			result="/"+fechaPartida[i]+result;
+		}
+		return result.substring(1);
 		
 	}
 
@@ -348,17 +347,9 @@ public class VentanaTarjetaCredito extends JFrame {
 		if (lblJusti == null) {
 			lblJusti = new JLabel("Justificante de pago:");
 			lblJusti.setFont(new Font("Tahoma", Font.PLAIN, 13));
-			lblJusti.setBounds(27, 395, 140, 21);
+			lblJusti.setBounds(27, 367, 140, 21);
 		}
 		return lblJusti;
-	}
-	private JTextArea getTextArea_1() {
-		if (textArea_1 == null) {
-			textArea_1 = new JTextArea();
-			textArea_1.setEditable(false);
-			textArea_1.setBounds(27, 428, 481, 206);
-		}
-		return textArea_1;
 	}
 	private JButton getBtnFinalizar() {
 		if (btnFinalizar == null) {
@@ -366,8 +357,23 @@ public class VentanaTarjetaCredito extends JFrame {
 			btnFinalizar.setFont(new Font("Tahoma", Font.PLAIN, 14));
 			btnFinalizar.setForeground(Color.WHITE);
 			btnFinalizar.setBackground(Color.RED);
-			btnFinalizar.setBounds(562, 643, 89, 23);
+			btnFinalizar.setBounds(562, 601, 89, 23);
 		}
 		return btnFinalizar;
+	}
+	private JScrollPane getScrollPane() {
+		if (scrollPane == null) {
+			scrollPane = new JScrollPane();
+			scrollPane.setBounds(27, 399, 504, 192);
+			scrollPane.setViewportView(getTextArea_1_1());
+		}
+		return scrollPane;
+	}
+	private JTextArea getTextArea_1_1() {
+		if (textAreaJusti == null) {
+			textAreaJusti = new JTextArea();
+			textAreaJusti.setEditable(false);
+		}
+		return textAreaJusti;
 	}
 }

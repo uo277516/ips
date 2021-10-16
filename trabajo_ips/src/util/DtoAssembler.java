@@ -92,15 +92,24 @@ public class DtoAssembler {
 
 	private static InscripcionDto cogerDatosInscripcion(ResultSet rs) throws SQLException {
 		InscripcionDto i = new InscripcionDto();
-		i.setCantidad_pagada(Float.parseFloat(rs.getString("cantidad_pagada")));
-		i.setCategoria(rs.getString("categoria"));
-		i.setDni_a(rs.getString("dni_a"));
-		i.setEmail(rs.getString("email"));
-		i.setFecha(rs.getString("fecha"));
-		i.setHoras(Integer.parseInt(rs.getString("horas")));
-		i.setId_c(rs.getString("id_c"));
-		i.setMetodo_pago(rs.getString("metodo_pago"));
-		i.setMinutos(Integer.parseInt(rs.getString("minutos")));
+		if (rs.getString("cantidad_pagada")!=null)
+			i.setCantidad_pagada(Float.parseFloat(rs.getString("cantidad_pagada")));
+		if (rs.getString("categoria")!=null)
+			i.setCategoria(rs.getString("categoria"));
+		if (rs.getString("dni_a")!=null)
+			i.setDni_a(rs.getString("dni_a"));
+		if (rs.getString("email")!=null)
+			i.setEmail(rs.getString("email"));
+		if (rs.getString("fecha")!=null)
+			i.setFecha(rs.getString("fecha"));
+		if (rs.getString("horas")!=null)	
+			i.setHoras(Integer.parseInt(rs.getString("horas")));
+		if (rs.getString("id_c")!=null)
+			i.setId_c(rs.getString("id_c"));
+		if (rs.getString("metodo_pago")!=null)	
+			i.setMetodo_pago(rs.getString("metodo_pago"));
+		if (rs.getString("minutos")!=null)	
+			i.setMinutos(Integer.parseInt(rs.getString("minutos")));
 		return i;
 	}
 
@@ -115,7 +124,7 @@ public class DtoAssembler {
 			while(rs.next())
 			{
 				try {
-					if (compararFecha(rs.getString("f_fin"),fecha,rs.getString("f_inicio")))
+					if (compararFecha(rs.getString("f_fin"),fecha,rs.getString("f_inicio"))&& rs.getInt("num_plazas")>0)
 						lista.add(cogerDatosCompeticion(rs));
 				} catch (ParseException e) {
 					// TODO Auto-generated catch block

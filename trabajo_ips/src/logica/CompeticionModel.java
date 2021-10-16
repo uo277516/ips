@@ -16,6 +16,7 @@ public class CompeticionModel
 	
 	public static String sql1 = "select * from competicion";
 	public static String sql2ById = "select * from competicion where id=?";
+	public static String sqlActualizarPlazas = "update competicion set num_plazas = num_plazas-1 where id =?";
 	
 	public List<CompeticionDto> getCompeticiones() throws SQLException
 	{
@@ -148,5 +149,36 @@ public class CompeticionModel
 			);
 		}
         return listaCompeticiones;
+	}
+	
+	public void actualizarPlazas(int id)
+	{
+		try {
+			actualizarPlazasP(id);
+		} catch (SQLException e) {
+			System.out.println("no se pudo actuliazar");
+			e.printStackTrace();
+		}
+	}
+	
+
+	private void actualizarPlazasP(int id) throws SQLException {
+		// Conexión a la base de datos
+        Connection c = null;
+        PreparedStatement pst = null;
+//        ResultSet rs = null;
+        try {
+            c = BaseDatos.getConnection();
+            pst = c.prepareStatement(sqlActualizarPlazas);
+            pst.setInt(1, id);
+            pst.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            pst.close();
+            c.close();
+        }
+		
 	}
 }
