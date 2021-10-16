@@ -15,8 +15,9 @@ public class InscripcionModel
 	
 public static String sql1 = "select * from inscripcion";
 public static String sql2 = "select * from inscripcion where inscripcion.email=?";
-public static String sql3 = "insert into inscripcion (dni_a, id_c, email) values (?,?,?)";
+public static String sql3 = "insert into inscripcion (dni_a, id_c, email, estado,cantidad_pagada,fecha) values (?,?,?,'Pre-inscrito',?,?)";
 public static String sql4 = "select * from atleta where atleta.email=?";
+public static String sql5DniAtleta = "select dni_a from inscripcion where email=? and id_c =?";
 
 
 
@@ -145,10 +146,10 @@ public static String sql4 = "select * from atleta where atleta.email=?";
 	}
 
 	
-	public void agregarInscripcion(String text, int id)
+	public void agregarInscripcion(String text, int id, float f, String fecha)
 	{
 		try {
-			agregarParticipante(text, id);
+			agregarParticipante(text, id, f,fecha);
 		} catch (SQLException e) {
 			System.out.println("no se pudo añadir -- inscripcion model");
 			e.printStackTrace();
@@ -156,7 +157,7 @@ public static String sql4 = "select * from atleta where atleta.email=?";
 	}
 	
 
-	private void agregarParticipante(String email, int id) throws SQLException {
+	private void agregarParticipante(String email, int id, float f, String fecha) throws SQLException {
 		AtletaDto a = findAtletaEmail(email);
 		String dni = a.getDni();
 		// Conexión a la base de datos
@@ -169,7 +170,8 @@ public static String sql4 = "select * from atleta where atleta.email=?";
             pst.setString(1, dni);
             pst.setInt(2, id);
             pst.setString(3, email);
-           
+            pst.setFloat(4, f);
+            pst.setString(5, fecha);
              
             pst.executeUpdate();
 
@@ -183,6 +185,7 @@ public static String sql4 = "select * from atleta where atleta.email=?";
             c.close();
         }
 	}
+}
 
 //
 //	public AtletaDto getNombreEmail(String email)
@@ -223,5 +226,3 @@ public static String sql4 = "select * from atleta where atleta.email=?";
 //
 //		return a;
 //	}
-
-}

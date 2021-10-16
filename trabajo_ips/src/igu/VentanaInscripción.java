@@ -1,9 +1,20 @@
 package igu;
 
-import java.awt.EventQueue;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Label;
+import java.awt.SystemColor;
+import java.awt.TextField;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.time.LocalDate;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
 import javax.swing.border.EmptyBorder;
 
 import logica.AtletaDto;
@@ -11,23 +22,6 @@ import logica.AtletaModel;
 import logica.CompeticionDto;
 import logica.CompeticionModel;
 import logica.InscripcionModel;
-
-import java.awt.Color;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-
-import java.awt.Font;
-import java.awt.TextField;
-import java.awt.Label;
-
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JButton;
-import java.awt.event.ActionListener;
-import java.time.LocalDate;
-import java.awt.event.ActionEvent;
-import java.awt.SystemColor;
-import javax.swing.JComboBox;
-import javax.swing.JTextArea;
 
 public class VentanaInscripción extends JFrame {
 	
@@ -50,6 +44,7 @@ public class VentanaInscripción extends JFrame {
 	private CompeticionDto cSeleccionada;
 	private VentanaMostrarCarreras vC;
 	private JTextArea textArea;
+	private JButton btnSiguiente;
 	
 //	/**
 //	 * Launch the application.
@@ -70,7 +65,7 @@ public class VentanaInscripción extends JFrame {
 	/**
 	 * Create the frame.
 	 * @param competicionDto 
-	 * @param ventanaMostrarCarreras hola que tal
+	 * @param ventanaMostrarCarreras 
 	 */
 	public VentanaInscripción(VentanaMostrarCarreras ventanaMostrarCarreras, CompeticionDto competicionDto) {
 		ins = new InscripcionModel();
@@ -92,6 +87,7 @@ public class VentanaInscripción extends JFrame {
 		contentPane.add(getBtnValidar());
 		contentPane.add(getLblInfoJus());
 		contentPane.add(getTextArea());
+		contentPane.add(getBtnSiguiente());
 	}
 	private JLabel getLblPedir() {
 		if (lblPedir == null) {
@@ -134,6 +130,7 @@ public class VentanaInscripción extends JFrame {
 					{
 						textArea.setEnabled(true);
 						lblInfoJus.setVisible(true);
+						btnSiguiente.setEnabled(true);
 						inscribirParticipante();
 						textArea.setText(getInformacion());
 					} else if (yaRegistradoEnlaCarrera())
@@ -157,8 +154,10 @@ public class VentanaInscripción extends JFrame {
 	protected void inscribirParticipante() {
 		System.out.println(txtEmail.getText());
 		System.out.println(cSeleccionada.getId());
-
-		ins.agregarInscripcion(txtEmail.getText(),cSeleccionada.getId());
+		float n = 10.0f+cSeleccionada.getCuota();
+		ins.agregarInscripcion(txtEmail.getText(),cSeleccionada.getId(),n,cambiarFormatoFecha());
+		
+		
 	}
 
 	protected boolean haySuficientesPlazas() {
@@ -195,12 +194,13 @@ public class VentanaInscripción extends JFrame {
 	 */
 	private String getInformacion() {
 		String s = "";
+		float n = 10.0f+cSeleccionada.getCuota();
 		AtletaDto nombre = ins.findAtletaEmail(txtEmail.getText()); 
 		return s+="Nombre del atleta: " + nombre.getNombre() + "\n" +
 			"Competición: " + cSeleccionada.getNombre() + "\n" +
 			"Categoría: " + "esto lo hace tania:)" + "\n" +
 			"Fecha de inscripción: " + cambiarFormatoFecha() + "\n" +
-			"Cantidad a abonar: " + cSeleccionada.getCuota();
+			"Cantidad a abonar: " + n  +" euros (cuota+gastos adicionales)";
 	}
 	
 	private String cambiarFormatoFecha() {
@@ -225,8 +225,25 @@ public class VentanaInscripción extends JFrame {
 	private JTextArea getTextArea() {
 		if (textArea == null) {
 			textArea = new JTextArea();
+			textArea.setFont(new Font("Tahoma", Font.PLAIN, 13));
 			textArea.setBounds(20, 206, 404, 139);
 		}
 		return textArea;
+	}
+	private JButton getBtnSiguiente() {
+		if (btnSiguiente == null) {
+			btnSiguiente = new JButton("Siguiente");
+			btnSiguiente.setEnabled(false);
+			btnSiguiente.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					
+				}
+			});
+			btnSiguiente.setBackground(Color.GREEN);
+			btnSiguiente.setForeground(Color.WHITE);
+			btnSiguiente.setFont(new Font("Tahoma", Font.PLAIN, 18));
+			btnSiguiente.setBounds(488, 351, 106, 23);
+		}
+		return btnSiguiente;
 	}
 }

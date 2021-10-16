@@ -73,6 +73,7 @@ public class VentanaTarjetaCredito extends JFrame {
 	private JTextArea getTextArea() {
 		if (textArea == null) {
 			textArea = new JTextArea();
+			textArea.setEditable(false);
 			textArea.setFont(new Font("Tahoma", Font.PLAIN, 14));
 			textArea.setText("Para realizar el pago mediante tarjeta de cr\u00E9dito necesita registrar los datos de esta. \r\nUna vez validados, se emitir\u00E1 un justificante de pago realizado y pasar\u00E1 a estado inscrito en la\r\ncompeteci\u00F3n.");
 			textArea.setBounds(27, 21, 634, 58);
