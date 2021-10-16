@@ -17,6 +17,8 @@ public static String sql1 = "select * from inscripcion";
 public static String sql2 = "select * from inscripcion where inscripcion.email=?";
 public static String sql3 = "insert into inscripcion (dni_a, id_c, email, estado,cantidad_pagada,fecha) values (?,?,?,'Pre-inscrito',?,?)";
 public static String sql4 = "select * from atleta where atleta.email=?";
+public static String sql6 = "select * from inscripcion where inscripcion.email=? order by inscripcion.fecha asc";
+public static String sql5 = "select * from inscripcion where inscripcion.dni_a=? order by inscripcion.fecha asc";
 
 
 
@@ -185,44 +187,87 @@ public static String sql4 = "select * from atleta where atleta.email=?";
         }
 	}
 
-//
-//	public AtletaDto getNombreEmail(String email)
-//	{
-//		AtletaDto s = null;
-//		try {
-//			s = getNombreByEmail(email);
-//		} catch (SQLException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		return s;
-//	}
-//	
-//	
-//	private AtletaDto getNombreByEmail(String email) throws SQLException 
-//	{
-//		AtletaDto a = new AtletaDto();
-//		 // Conexión a la base de datos
-//        Connection c = null;
-//        PreparedStatement pst = null;
-//        ResultSet rs = null;
-//        try {
-//            c = BaseDatos.getConnection();
-//            pst = c.prepareStatement(sql5);
-//            pst.setString(1, email);
-//            rs = pst.executeQuery();
-//            rs.next();
-//            a = DtoAssembler.toAtletaDto(rs);
-//
-//        } catch (SQLException e) {
-//            throw new RuntimeException(e);
-//        } finally {
-//            rs.close();
-//            pst.close();
-//            c.close();
-//        }
-//
-//		return a;
-//	}
+	public List<InscripcionDto> buscarInsByDni(String dni) {
+		List<InscripcionDto> listaDni = null;
+		try {
+			listaDni=buscarInsByDniP( dni);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return listaDni;
+	}
+	
+	public List<InscripcionDto> buscarInsByEmail(String email) {
+		List<InscripcionDto> listaE = null;
+		try {
+			listaE=buscarInsByEmailP( email);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return listaE;
+	}
+
+	private List<InscripcionDto> buscarInsByDniP(String dni) throws SQLException {
+		List<InscripcionDto> listaDni = new ArrayList<InscripcionDto>();
+
+        // Conexión a la base de datos
+        Connection c = null;
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        try {
+            c = BaseDatos.getConnection();
+            pst = c.prepareStatement(sql5);
+            pst.setString(1, dni);
+            rs = pst.executeQuery();
+
+            // Añadimos los pedidos a la lista
+            listaDni = DtoAssembler.toInscripcionDtoList(rs);
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            rs.close();
+            pst.close();
+            c.close();
+        }
+
+        for (InscripcionDto i : listaDni) {
+			System.out.println(i.getDni_a());
+		}
+        return listaDni;
+	}
+
+
+	public List<InscripcionDto> buscarInsByEmailP(String email) throws SQLException {
+		List<InscripcionDto> listaE = new ArrayList<InscripcionDto>();
+
+        // Conexión a la base de datos
+        Connection c = null;
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        try {
+            c = BaseDatos.getConnection();
+            pst = c.prepareStatement(sql6);
+            pst.setString(1, email);
+            rs = pst.executeQuery();
+
+            // Añadimos los pedidos a la lista
+            listaE = DtoAssembler.toInscripcionDtoList(rs);
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            rs.close();
+            pst.close();
+            c.close();
+        }
+
+        for (InscripcionDto i : listaE) {
+			System.out.println(i.getEmail());
+		}
+        return listaE;
+	}
 
 }

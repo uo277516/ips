@@ -134,8 +134,11 @@ public class VentanaInicial extends JFrame {
 					}}
 
 	private void mostrarVentanaConocerEstado() {
-		// TODO Auto-generated method stub
-		
+//		this.dispose();
+//		//CompeticionDto competicion = crearCompeticion();
+//		VentanaInscripcionesAtleta vPal = new VentanaInscripcionesAtleta(this);
+//		vPal.setLocationRelativeTo(this);
+//		vPal.setVisible(true);
 	}
 
 	private void mostrarVentanaCarreras() {
