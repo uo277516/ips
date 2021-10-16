@@ -119,7 +119,19 @@ public class CompeticionModel
         return listaCompeticiones;
 	}
 	
-	public List<CompeticionDto> getCompeticionById(String identificador) throws SQLException {
+	public List<CompeticionDto> getCompeticionById(String id)
+	{
+		List<CompeticionDto> listaCompeticiones = null;
+		try {
+			listaCompeticiones=getCompeticionByIdP(id);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return listaCompeticiones;
+	}
+	
+	public List<CompeticionDto> getCompeticionByIdP(String identificador) throws SQLException {
 		List<CompeticionDto> listaCompeticiones = new ArrayList<CompeticionDto>();
 
         // Conexión a la base de datos

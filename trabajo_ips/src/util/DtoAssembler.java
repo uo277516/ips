@@ -104,6 +104,8 @@ public class DtoAssembler {
 			i.setMetodo_pago(rs.getString("metodo_pago"));
 		if (rs.getString("minutos")!=null)	
 			i.setMinutos(Integer.parseInt(rs.getString("minutos")));
+		if (rs.getString("estado")!=null)
+			i.setEstado(rs.getString("estado"));
 		return i;
 	}
 

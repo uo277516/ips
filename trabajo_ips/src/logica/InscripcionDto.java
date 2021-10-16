@@ -90,9 +90,30 @@ public class InscripcionDto {
 	}
 
 	private int minutos;
+	private String estado;
 	
 	public InscripcionDto()
 	{
+	}
+
+	public String getEstado() {
+		return estado;
+	}
+
+	public void setEstado(String estado) {
+		this.estado = estado;
+	}
+
+	public String mostrarMisInscripcionesNombre(String nombre) {
+		return "--> Nombre: " + nombre;
+	}
+	
+	public String mostrarMisInscripcionesEstado() {
+		return "      Estado de la inscripción:"
+				+ " " + getEstado();
+	}
+	public String mostrarMisInscripcionesFecha() {
+		return "      Fecha último cambio: " + getFecha();
 	}
 	
 	

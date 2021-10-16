@@ -1,9 +1,20 @@
 package igu;
 
-import java.awt.EventQueue;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Label;
+import java.awt.SystemColor;
+import java.awt.TextField;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.time.LocalDate;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
 import javax.swing.border.EmptyBorder;
 
 import logica.AtletaDto;
@@ -11,23 +22,6 @@ import logica.AtletaModel;
 import logica.CompeticionDto;
 import logica.CompeticionModel;
 import logica.InscripcionModel;
-
-import java.awt.Color;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-
-import java.awt.Font;
-import java.awt.TextField;
-import java.awt.Label;
-
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JButton;
-import java.awt.event.ActionListener;
-import java.time.LocalDate;
-import java.awt.event.ActionEvent;
-import java.awt.SystemColor;
-import javax.swing.JComboBox;
-import javax.swing.JTextArea;
 
 public class VentanaInscripción extends JFrame {
 	
@@ -46,8 +40,10 @@ public class VentanaInscripción extends JFrame {
 	private JLabel lblInfoJus;
 	private InscripcionModel ins;
 	private AtletaModel atl;
+	@SuppressWarnings("unused")
 	private CompeticionModel comp;
 	private CompeticionDto cSeleccionada;
+	@SuppressWarnings("unused")
 	private VentanaMostrarCarreras vC;
 	private JTextArea textArea;
 	private AtletaDto atleta;

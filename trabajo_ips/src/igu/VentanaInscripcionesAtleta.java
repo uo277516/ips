@@ -1,31 +1,31 @@
 package igu;
 
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
-
-import javax.swing.ButtonGroup;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
 import java.awt.Color;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-
 import java.awt.Font;
-import javax.swing.border.TitledBorder;
-
-import logica.InscripcionDto;
-import logica.InscripcionModel;
-
-import javax.swing.UIManager;
-import javax.swing.JRadioButton;
-import javax.swing.JButton;
-import javax.swing.JTextField;
+import java.awt.SystemColor;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
-import java.awt.event.ActionEvent;
-import java.awt.SystemColor;
-import javax.swing.JTextArea;
+
+import javax.swing.ButtonGroup;
+import javax.swing.DefaultListModel;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
+import javax.swing.UIManager;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.TitledBorder;
+
+import logica.CompeticionModel;
+import logica.InscripcionDto;
+import logica.InscripcionModel;
 
 public class VentanaInscripcionesAtleta extends JFrame {
 
@@ -47,32 +47,39 @@ public class VentanaInscripcionesAtleta extends JFrame {
 	private JButton btnMostrar;
 	private InscripcionModel im;
 	private List<InscripcionDto> insAtleta;
-	private JTextArea txtInfo;
-	private String infoInscripciones;
-
+	private CompeticionModel cm;
+	@SuppressWarnings("unused")
+	private VentanaInicial vi;
+	private JScrollPane scrollPane;
+	private JList<String> list;
+	private DefaultListModel<String> listaINs;
+	
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					VentanaInscripcionesAtleta frame = new VentanaInscripcionesAtleta();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+//	public static void main(String[] args) {
+//		EventQueue.invokeLater(new Runnable() {
+//			public void run() {
+//				try {
+//					VentanaInscripcionesAtleta frame = new VentanaInscripcionesAtleta();
+//					frame.setVisible(true);
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//				}
+//			}
+//		});
+//	}
 
 	/**
 	 * Create the frame.
 	 */
-	public VentanaInscripcionesAtleta() {
+	public VentanaInscripcionesAtleta(VentanaInicial vi) {
+		this.vi=vi;
 		im= new InscripcionModel();
+		cm = new CompeticionModel();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 575, 498);
+		setLocationRelativeTo(null);
 		contentPane = new JPanel();
 		contentPane.setBackground(Color.WHITE);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -86,7 +93,8 @@ public class VentanaInscripcionesAtleta extends JFrame {
 		contentPane.add(getTxtDNI());
 		contentPane.add(getLblEmail());
 		contentPane.add(getBtnMostrar());
-		contentPane.add(getTxtInfo());
+		contentPane.add(getScrollPane());
+		//contentPane.add(getList());
 	}
 
 	private JLabel getLblPreguntar() {
@@ -241,21 +249,32 @@ public class VentanaInscripcionesAtleta extends JFrame {
 	private void rellenarElTexto() {
 		for(int i=0; i<insAtleta.size(); i++)
 		{
-			infoInscripciones+=insAtleta.get(i).get
+			listaINs.addElement(insAtleta.get(i).mostrarMisInscripcionesNombre(cm.getCompeticionById(insAtleta.get(i).getId_c()).get(0).getNombre()));
+			listaINs.addElement(insAtleta.get(i).mostrarMisInscripcionesEstado());
+			listaINs.addElement(insAtleta.get(i).mostrarMisInscripcionesFecha());
+
 		}
 	}
 
 	private void mostrarInfo() {
-		txtInfo.setEnabled(true);
-		txtInfo.setText(infoInscripciones);
+		scrollPane.setEnabled(true);
 	}
-	
-	private JTextArea getTxtInfo() {
-		if (txtInfo == null) {
-			txtInfo = new JTextArea();
-			txtInfo.setEnabled(false);
-			txtInfo.setBounds(29, 245, 425, 170);
+	private JScrollPane getScrollPane() {
+		if (scrollPane == null) {
+			scrollPane = new JScrollPane();
+			scrollPane.setEnabled(false);
+			scrollPane.setBounds(30, 237, 498, 181);
+			scrollPane.setViewportView(getList());
 		}
-		return txtInfo;
+		return scrollPane;
+	}
+	private JList<String> getList() {
+		if (list == null) {
+			listaINs = new DefaultListModel<String>();
+			list = new JList<String>(listaINs);
+			list.setBounds(33, 419, 425, -163);
+			list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		}
+		return list;
 	}
 }

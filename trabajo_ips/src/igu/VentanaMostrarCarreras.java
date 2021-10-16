@@ -1,7 +1,6 @@
 package igu;
 
 import java.awt.Color;
-import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -37,13 +36,16 @@ public class VentanaMostrarCarreras extends JFrame {
 	private JPanel contentPane;
 	private JTextArea txtInfo;
 	private JTextField textFecha;
+	@SuppressWarnings("unused")
 	private InscripcionModel ins;
+	@SuppressWarnings("unused")
 	private AtletaModel atl;
 	private CompeticionModel comp;
 	private JButton btnAceptar;
 	private JLabel lblCompeticiones;
 	private JScrollPane scrollPane;
 	private JTable table;
+	@SuppressWarnings("unused")
 	private VentanaInicial vi;
 
 //	/**
@@ -92,30 +94,30 @@ public class VentanaMostrarCarreras extends JFrame {
 	 * @param dni
 	 * @return
 	 */
-	private boolean soloNumeros(String fecha) {
-		System.out.println(textFecha.getText());
-		String numero="";
-		int contador =0;
-		String minumero="";
-		String[] numeros= {"0","1","2","3","4","5","6","7","8","9"};
-		for (int i=0;i<fecha.length();i++) {
-			numero=fecha.substring(i,i+1);
-			for (int j=0;j<numeros.length;j++) {
-				if (numero.equals(numeros[j])) {
-					minumero=minumero+numeros[j];
-				}
-			}
-			if (numero.equals("/")) {
-				contador++;
-			}
-		}
-		if (contador==2 && minumero.length()==8) {
-			return true;
-		}else
-			return false;
-				
-		
-	}
+//	private boolean soloNumeros(String fecha) {
+//		System.out.println(textFecha.getText());
+//		String numero="";
+//		int contador =0;
+//		String minumero="";
+//		String[] numeros= {"0","1","2","3","4","5","6","7","8","9"};
+//		for (int i=0;i<fecha.length();i++) {
+//			numero=fecha.substring(i,i+1);
+//			for (int j=0;j<numeros.length;j++) {
+//				if (numero.equals(numeros[j])) {
+//					minumero=minumero+numeros[j];
+//				}
+//			}
+//			if (numero.equals("/")) {
+//				contador++;
+//			}
+//		}
+//		if (contador==2 && minumero.length()==8) {
+//			return true;
+//		}else
+//			return false;
+//				
+//		
+//	}
 	
 	private JTextArea getTxtInfo() {
 		if (txtInfo == null) {
