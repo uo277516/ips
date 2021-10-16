@@ -256,13 +256,13 @@ public class VentanaTarjetaCredito extends JFrame {
 		String cadena ="";
 		cadena = 
 		"Datos del Atleta:"+"\n"+ 
-				"\t"+atleta.getNombre() +"\n" +
+				"\tNombre: "+atleta.getNombre() +"\n" +
 				"\tSexo: "+atleta.getSexo()+"\n"
 				+"\tDNI: "+atleta.getDni() + "\n"+
 		"Competeción:"+ "\n" 
 				+"\tNombre: "+ competicion.getNombre()+"\n"+
 				"\tFecha: "+competicion.getF_comp()+"\n"+
-				"\tDistancia: "+ competicion.getCuota() + "\n"+
+				"\tDistancia: "+ competicion.getDistancia() + "\n"+
 		"Cuota: "+competicion.getCuota()+"\n"+
 		"Fecha de pago: "+ fechaString+"\n";
 		textAreaJusti.setText(cadena);
