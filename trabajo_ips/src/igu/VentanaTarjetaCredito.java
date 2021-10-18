@@ -250,7 +250,7 @@ public class VentanaTarjetaCredito extends JFrame {
 		return btnValidar;
 	}
 	private void pagarInscripcion() {
-		JOptionPane.showMessageDialog(this, "Pago realizado correctamente, se generará un jsutificante de la operación.");
+		JOptionPane.showMessageDialog(this, "Pago realizado correctamente, se generará un justificante de la operación.");
 		String fechaString = cambiarFormatoFecha();
 		inscripcion = ins.findInsByDniId(atleta.getDni(), competicion.getId());
 		String cadena ="";
@@ -262,8 +262,8 @@ public class VentanaTarjetaCredito extends JFrame {
 		"Competeción:"+ "\n" 
 				+"\tNombre: "+ competicion.getNombre()+"\n"+
 				"\tFecha: "+competicion.getF_comp()+"\n"+
-				"\tDistancia: "+ competicion.getDistancia() + "\n"+
-		"Cuota: "+competicion.getCuota()+"\n"+
+				"\tDistancia: "+ competicion.getDistancia()+"km" + "\n"+
+		"Cuota: "+competicion.getCuota()+"\u20AC"+"\n"+
 		"Fecha de pago: "+ fechaString+"\n";
 		textAreaJusti.setText(cadena);
 		consultasUpdate();
@@ -273,7 +273,7 @@ public class VentanaTarjetaCredito extends JFrame {
 	private void consultasUpdate() {
 		ins.actualizarInscripcionEstado("Inscrito",atleta.getDni(),competicion.getId());
 		comp.actualizarPlazas(competicion.getId());
-		
+		ins.actualizarInscripcionFecha(cambiarFormatoFecha(), atleta.getDni(), competicion.getId());
 	}
 
 

@@ -20,6 +20,7 @@ public static String sql4 = "select * from atleta where atleta.email=?";
 public static String sql5DniAtleta = "select dni_a from inscripcion where email=? and id_c =?";
 public static String sql6Ins = "select * from inscripcion where dni_a=? and id_c =?";
 public static String sql7UpdateEstado = "update inscripcion set estado=? where dni_a=? and id_c=?";
+public static String sql7UpdateFecha = "update inscripcion set fecha=? where dni_a=? and id_c=?";
 
 
 
@@ -195,6 +196,38 @@ public static String sql7UpdateEstado = "update inscripcion set estado=? where d
 			System.out.println("no se pudo añadir -- inscripcion model");
 			e.printStackTrace();
 		}
+	}
+	
+	public void actualizarInscripcionFecha(String fecha,String dni,int id)
+	{
+		try {
+			actualizarFechaP(fecha,dni,id);
+		} catch (SQLException e) {
+			System.out.println("no se pudo actuliazar");
+			e.printStackTrace();
+		}
+	}
+	
+	private void actualizarFechaP(String fecha,String dni,int id) throws SQLException {
+		// Conexión a la base de datos
+        Connection c = null;
+        PreparedStatement pst = null;
+//        ResultSet rs = null;
+        try {
+            c = BaseDatos.getConnection();
+            pst = c.prepareStatement(sql7UpdateFecha);
+            pst.setString(1, fecha); 
+            pst.setString(2, dni); 
+            pst.setInt(3, id); 
+            pst.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            pst.close();
+            c.close();
+        }
+		
 	}
 	
 	public void actualizarInscripcionEstado(String estado,String dni,int id)
