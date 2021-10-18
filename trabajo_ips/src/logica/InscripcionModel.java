@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,13 +16,20 @@ public class InscripcionModel
 	
 public static String sql1 = "select * from inscripcion";
 public static String sql2 = "select * from inscripcion where inscripcion.email=?";
-public static String sql3 = "insert into inscripcion (dni_a, id_c, email, estado,cantidad_pagada,fecha) values (?,?,?,'Pre-inscrito',?,?)";
+public static String sql3 = "insert into inscripcion (dni_a, id_c, email, estado,cantidad_pagada,fecha,categoria) values (?,?,?,'Pre-inscrito',?,?,?)";
 public static String sql4 = "select * from atleta where atleta.email=?";
 public static String sql6 = "select * from inscripcion where inscripcion.email=? order by inscripcion.fecha asc";
 public static String sql5 = "select * from inscripcion where inscripcion.dni_a=? order by inscripcion.fecha asc";
+public static String COMPID_INS = "select * from inscripcion where id_c=?";
 
+public static String ATLETA_DNI = "select * from atleta where dni = ?";
+public static String INS_DNI_IDC = "select * from inscripcion where dni_a = ? and id_c = ?";
+public static String CAT_INS_DNI_ID = "select categoria from inscripcion where dni_a = ? and id_c = ?";
+public static String sql6Ins = "select * from inscripcion where dni_a=? and id_c =?";
 
-
+public static String sql7UpdateEstado = "update inscripcion set estado=? where dni_a=? and id_c=?";
+public static String sql7UpdateFecha = "update inscripcion set fecha=? where dni_a=? and id_c=?";
+public static String sql7UpdatePago = "update inscripcion set metodo_pago=? where dni_a=? and id_c=?";
 
 	public AtletaDto findAtletaEmail(String email)
 	{
@@ -161,6 +169,7 @@ public static String sql5 = "select * from inscripcion where inscripcion.dni_a=?
 	private void agregarParticipante(String email, int id, float f, String fecha) throws SQLException {
 		AtletaDto a = findAtletaEmail(email);
 		String dni = a.getDni();
+		String cat = calcularCategoria(a.getF_nac());
 		// Conexión a la base de datos
         Connection c = null;
         PreparedStatement pst = null;
@@ -173,6 +182,7 @@ public static String sql5 = "select * from inscripcion where inscripcion.dni_a=?
             pst.setString(3, email);
             pst.setFloat(4, f);
             pst.setString(5, fecha);
+            pst.setString(6, cat);
              
             pst.executeUpdate();
 
@@ -185,6 +195,31 @@ public static String sql5 = "select * from inscripcion where inscripcion.dni_a=?
             pst.close();
             c.close();
         }
+	}
+	
+	private static int year1 = 18;
+	private static int year2 = 35;
+	private static String[] categories = {"A", "B", "C", "D", "E", "F", "G"};
+	
+	private String calcularCategoria(String fecha) {
+		String[] fechaArray = fecha.split("/");
+		int year = Integer.valueOf(fechaArray[2]);
+		int yearActual = LocalDate.now().getYear();
+		int cat = yearActual - year;
+		if(cat >= year1 && cat < year2) {
+			return "Senior";
+		}else if(cat >= year2) {
+			int a = year2;
+			int b = year2 + 5;
+			for(int i = 0; i < categories.length; i++) {
+				if(cat >= a && cat < b) {
+					return "Veterano " + categories[i];
+				}
+				a += 5;
+				b += 5;
+			}
+		}
+		return null;
 	}
 
 	public List<InscripcionDto> buscarInsByDni(String dni) {
@@ -269,5 +304,209 @@ public static String sql5 = "select * from inscripcion where inscripcion.dni_a=?
 		}
         return listaE;
 	}
+	
+	
+	public List<InscripcionDto> getInscripcionesDeUnaCompeticion(int id) throws SQLException{
+		List<InscripcionDto> inscripciones = new ArrayList<InscripcionDto>();
+		
+		Connection c = null;
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        try {
+            c = BaseDatos.getConnection();
+            pst = c.prepareStatement(COMPID_INS);
+            pst.setInt(1, id);
+            rs = pst.executeQuery();
 
+            inscripciones = DtoAssembler.toInscripcionDtoList(rs);
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            rs.close();
+            pst.close();
+            c.close();
+        }
+        return inscripciones;
+	}
+
+	
+	public String getCategoriaByDniId(String dni, int id)
+	{
+		String a = "";
+		try {
+			a = getCategoria(dni, id);
+		} catch (SQLException e) {
+			System.out.println("no se pudo añadir -- inscripcion model");
+			e.printStackTrace();
+		}
+		return a;
+	}
+	
+	private String getCategoria(String dni, int id) throws SQLException {
+		String a ="";
+		Connection c = null;
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        try {
+            c = BaseDatos.getConnection();
+            pst = c.prepareStatement(CAT_INS_DNI_ID);
+            pst.setString(1, dni);
+            pst.setInt(2, id);
+            rs = pst.executeQuery();
+            rs.next();
+            
+            a = rs.getString(1);
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            rs.close();
+            pst.close();
+            c.close();
+        }
+        return a;
+	}
+	
+	
+	public InscripcionDto findInsByDniId(String dni_a,int id_c) {
+		InscripcionDto ins = null;
+		try {
+			ins= findInsByDniIdP(dni_a, id_c);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return ins;
+	}
+	
+	private InscripcionDto findInsByDniIdP(String dni_a,int id_c) throws SQLException 
+	{
+		InscripcionDto a = null;
+		Connection c = null;
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        try {
+            c = BaseDatos.getConnection();
+            pst = c.prepareStatement(sql6Ins);
+            pst.setString(1, dni_a);
+            pst.setInt(2, id_c);
+            //System.out.println(pst);
+            rs = pst.executeQuery();
+            rs.next();
+            
+            a = DtoAssembler.toInscripcionDto(rs);
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            rs.close();
+            pst.close();
+            c.close();
+        }
+        return a;
+	}
+	
+	
+	
+	public void actualizarInscripcionEstado(String estado,String dni,int id)
+	{
+		try {
+			actualizarEstado(estado,dni,id);
+		} catch (SQLException e) {
+			System.out.println("no se pudo actuliazar");
+			e.printStackTrace();
+		}
+	}
+	
+
+	private void actualizarEstado(String estado,String dni,int id) throws SQLException {
+		// Conexión a la base de datos
+        Connection c = null;
+        PreparedStatement pst = null;
+//        ResultSet rs = null;
+        try {
+            c = BaseDatos.getConnection();
+            pst = c.prepareStatement(sql7UpdateEstado);
+            pst.setString(1, estado); 
+            pst.setString(2, dni); 
+            pst.setInt(3, id); 
+            pst.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            pst.close();
+            c.close();
+        }
+		
+	}
+	
+	
+	
+	
+	public void actualizarInscripcionFecha(String fecha,String dni,int id)
+	{
+		try {
+			actualizarFechaP(fecha,dni,id);
+		} catch (SQLException e) {
+			System.out.println("no se pudo actuliazar");
+			e.printStackTrace();
+		}
+	}
+	
+	private void actualizarFechaP(String fecha,String dni,int id) throws SQLException {
+		// Conexión a la base de datos
+        Connection c = null;
+        PreparedStatement pst = null;
+//        ResultSet rs = null;
+        try {
+            c = BaseDatos.getConnection();
+            pst = c.prepareStatement(sql7UpdateFecha);
+            pst.setString(1, fecha); 
+            pst.setString(2, dni); 
+            pst.setInt(3, id); 
+            pst.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            pst.close();
+            c.close();
+        }
+		
+	}
+
+	public void cambiarMetodoPago(String string,String dni,int id)
+	{
+		try {
+			cambiarMetodoPagoP(string,dni,id);
+		} catch (SQLException e) {
+			System.out.println("no se pudo actuliazar");
+			e.printStackTrace();
+		}
+	}
+
+	public void cambiarMetodoPagoP(String string, String dni, int id) throws SQLException {
+		// Conexión a la base de datos
+        Connection c = null;
+        PreparedStatement pst = null;
+//        ResultSet rs = null;
+        try {
+            c = BaseDatos.getConnection();
+            pst = c.prepareStatement(sql7UpdatePago);
+            pst.setString(1, string); 
+            pst.setString(2, dni); 
+            pst.setInt(3, id); 
+            pst.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            pst.close();
+            c.close();
+        }
+		
+	}
+	
 }

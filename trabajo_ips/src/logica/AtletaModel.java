@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +22,10 @@ public class AtletaModel
 			+ "		inscripcion.email=? and "
 			+ "     competicion.nombre=?";
 	public static String sql3 = "select * from atleta where atleta.email=?";
-	
+	public static String COMPID_ATL = "select a.dni, a.nombre, a.sexo, a.f_nac, a.email"
+			+ " from atleta as a, inscripcion as i"
+			+ " where a.dni = i.dni_a"
+			+ " and i.id_c = ?";
 	
 	public List<AtletaDto> getAtletas() throws SQLException
 	{
@@ -165,7 +169,64 @@ public class AtletaModel
 	}
 
 
+	public List<AtletaDto> getAletasDeUnaCompeticion(int id) throws SQLException{
+		List<AtletaDto> atletas = new ArrayList<AtletaDto>();
+		
+		Connection c = null;
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        try {
+            c = BaseDatos.getConnection();
+            pst = c.prepareStatement(COMPID_ATL);
+            pst.setInt(1, id);
+            rs = pst.executeQuery();
 
+            atletas = DtoAssembler.toAtletaDtoList(rs);
 
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            rs.close();
+            pst.close();
+            c.close();
+        }
+        
+        return atletas;
+	}
+
+	public int yearsAtleta(String email) {
+		int years = 0;
+		try {
+			 years=yearsAtletaByEmail(email);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return years;
+	}
+
+	private int yearsAtletaByEmail(String email) throws SQLException {
+		int years = 0;
+		Connection c = null;
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        try {
+            c = BaseDatos.getConnection();
+            pst = c.prepareStatement(sql3);
+            pst.setString(1, email);
+            rs = pst.executeQuery();
+            rs.next();
+            String fecha = rs.getString("f_nac");
+            int year = Integer.valueOf((fecha.split("/")[2]));
+            int yearActual = LocalDate.now().getYear();
+            years = yearActual-year;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            pst.close();
+            c.close();
+        }
+        return years;
+	}
 	
 }

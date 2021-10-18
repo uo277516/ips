@@ -94,13 +94,13 @@ public class VentanaInicial extends JFrame {
 
 				if (seleccion != -1)
 				   System.out.println("seleccionada opcion " + (seleccion + 1));	
-				if (seleccion==0) //tarjeta de credito
+				if (seleccion==0) //organizador
 					{
-						mostrarVentanaInscripciones();
+						mostrarVentanaInscripciones();  //tania
 					}
 				else if (seleccion==1)
 					{
-						mostrarVentanaCalificaciones();
+						mostrarVentanaCalificaciones(); //moises
 					}}
 	
 
@@ -110,8 +110,11 @@ public class VentanaInicial extends JFrame {
 	}
 
 	private void mostrarVentanaInscripciones() {
-		// TODO Auto-generated method stub
-		
+		this.dispose();
+		//CompeticionDto competicion = crearCompeticion();
+		VentanaMostrarCarrerasOrganizador vPal = new VentanaMostrarCarrerasOrganizador(this);
+		vPal.setLocationRelativeTo(this);
+		vPal.setVisible(true);
 	}
 
 	protected void elegirAsAtleta() {

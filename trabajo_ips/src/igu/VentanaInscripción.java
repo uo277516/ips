@@ -135,6 +135,9 @@ public class VentanaInscripción extends JFrame {
 					{
 						mostrarErrorDatosNoRegistrados();
 					}
+				    else if(esMenor()) {
+				    	mostrarErrorMenor();
+				    }
 					else if (!yaRegistradoEnlaCarrera())
 					{
 						textArea.setEnabled(true);
@@ -168,6 +171,21 @@ public class VentanaInscripción extends JFrame {
 		if (atl.atletaEnBase(txtEmail.getText())) return false;
 		else return true;
 	}
+	
+	protected void mostrarErrorMenor() {
+		JOptionPane.showMessageDialog(this, "Usted es menor de edad, por lo tanto no puede participar en la competiciÃ³n");
+		
+	}
+	
+	private boolean esMenor() {
+		int years = atl.yearsAtleta(txtEmail.getText());
+		if(years>=18) {
+			return false;
+		}else {
+			return true;
+		}
+	}
+	
 	protected void inscribirParticipante() {
 		System.out.println(txtEmail.getText());
 		System.out.println(cSeleccionada.getId());
@@ -215,7 +233,7 @@ public class VentanaInscripción extends JFrame {
 		atleta = ins.findAtletaEmail(txtEmail.getText()); 
 		return s+="Nombre del atleta: " + atleta.getNombre() + "\n" +
 			"Competición: " + cSeleccionada.getNombre() + "\n" +
-			"Categoría: " + "esto lo hace tania:)" + "\n" +
+			"Categoría: " + ins.getCategoriaByDniId(atleta.getDni(), cSeleccionada.getId()) + "\n" +
 			"Fecha de inscripción: " + cambiarFormatoFecha() + "\n" +
 			"Cantidad a abonar: " + n  +" euros (cuota+gastos adicionales)";
 	}
