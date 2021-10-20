@@ -131,7 +131,7 @@ public class VentanaInscripción extends JFrame {
 					{
 						mostrarErrorVacio();
 					}
-					else if (noRegistradoElAtleta())
+					else if (!registradoAtletaEnBase())
 					{
 						mostrarErrorDatosNoRegistrados();
 					}
@@ -167,7 +167,7 @@ public class VentanaInscripción extends JFrame {
 		JOptionPane.showMessageDialog(this, "Sus datos todavía no han sido registrados");
 		
 	}
-	protected boolean noRegistradoElAtleta() {
+	private boolean registradoAtletaEnBase() {
 		if (atl.atletaEnBase(txtEmail.getText())) return false;
 		else return true;
 	}
