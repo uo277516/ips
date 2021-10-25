@@ -3,6 +3,7 @@ package logica;
 public class AtletaDto {
 	
 	private String nombre;
+<<<<<<< HEAD
 	private String email;
 	private String dni;
 	public String getNombre() {

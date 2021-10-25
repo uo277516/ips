@@ -6,6 +6,24 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
+<<<<<<< HEAD
 	<classpathentry kind="lib" path="lib/hsqldb.jar"/>
+=======
+	<classpathentry kind="lib" path="C:/Users/moise/Desktop/IPS/lib/c3p0-0.9.5.1.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/moise/Desktop/IPS/lib/hsqldb.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/moise/Desktop/IPS/lib/mchange-commons-java-0.2.10.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+>>>>>>> branch 'UO264802' of https://github.com/uo277516/ips.git
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -7,6 +7,7 @@ import java.sql.Statement;
 
 public class BaseDatos {
 
+<<<<<<< HEAD
 //v
 	private static String DRIVER = "org.hsqldb.jdbcDriver";
 	private static String URL = "jdbc:hsqldb:hsql://localhost";
@@ -29,6 +30,30 @@ public class BaseDatos {
 		close(rs);
 		close(st);
 		close(c);
+=======
+
+	private static String DRIVER = "org.hsqldb.jdbcDriver";
+	private static String URL = "jdbc:hsqldb:hsql://localhost";
+	private static String USER = "sa";
+	private static String PASS = "";
+
+	static {
+		try {
+			Class.forName( DRIVER );
+		} catch (ClassNotFoundException e) {
+			throw new RuntimeException("Driver not found in classpath", e);
+		}
+	}
+
+	public static Connection getConnection() throws SQLException {
+		return DriverManager.getConnection(URL, USER, PASS);
+	}
+
+	public static void close(ResultSet rs, Statement st, Connection c) {
+		close(rs);
+		close(st);
+		close(c); 
+>>>>>>> branch 'UO264802' of https://github.com/uo277516/ips.git
 	}
 
 	public static void close(ResultSet rs, Statement st) {
