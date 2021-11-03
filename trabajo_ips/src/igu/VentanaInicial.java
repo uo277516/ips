@@ -105,8 +105,11 @@ public class VentanaInicial extends JFrame {
 	
 
 	private void mostrarVentanaCalificaciones() {
-		// TODO Auto-generated method stub
-		
+		this.dispose();
+		//CompeticionDto competicion = crearCompeticion();
+		VentanaClasificación vPal = new VentanaClasificación(this);
+		vPal.setLocationRelativeTo(this);
+		vPal.setVisible(true);
 	}
 
 	private void mostrarVentanaInscripciones() {

@@ -300,8 +300,11 @@ public class VentanaInscripción extends JFrame {
 		return btnSiguiente;
 	}
 	protected void mostrarVentanaTransferencia() {
-		// TODO Auto-generated method stub
-		
+		this.dispose();
+		//CompeticionDto competicion = crearCompeticion();
+		VentanaTransferencia vt = new VentanaTransferencia(this);
+		vt.setLocationRelativeTo(this);
+		vt.setVisible(true);
 	}
 	protected void mostrarVentanaTarjetaDeCredito() {
 		this.dispose();

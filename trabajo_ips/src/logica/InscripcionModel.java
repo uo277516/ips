@@ -31,6 +31,11 @@ public static String sql7UpdateEstado = "update inscripcion set estado=? where d
 public static String sql7UpdateFecha = "update inscripcion set fecha=? where dni_a=? and id_c=?";
 public static String sql7UpdatePago = "update inscripcion set metodo_pago=? where dni_a=? and id_c=?";
 
+public static String sql_InscripcionesPorTiempo = "select  * from inscripcion i, atleta a where i.dni_a = a.dni \r\n"
+		+ "order by horas is null, minutos is null, horas, minutos asc";
+public static String sql_InscripcionesPorTiempoYCategoria = "select  * from inscripcion i, atleta a where i.dni_a = a.dni and ? order by horas is null, minutos is null, horas, minutos asc";
+public static String sql_InscripcionesPorTiempoYSexo = "select  * from inscripcion i, atleta a where i.dni_a = a.dni and a.sexo=? order by horas is null, minutos is null, horas, minutos asc";
+
 	public AtletaDto findAtletaEmail(String email)
 	{
 		AtletaDto a = null;
@@ -508,5 +513,59 @@ public static String sql7UpdatePago = "update inscripcion set metodo_pago=? wher
         }
 		
 	}
+	
+	
+	public List<InscripcionDto> getInscripcionesPorTiempo(int carreraId) throws SQLException {
+		List<InscripcionDto> listaInscripciones = new ArrayList<InscripcionDto>();
+
+		// Conexión a la base de datos
+		Connection c = null;
+		PreparedStatement pst = null;
+		ResultSet rs = null;
+		try {
+			c = BaseDatos.getConnection();
+			pst = c.prepareStatement(sql_InscripcionesPorTiempo);
+			rs = pst.executeQuery();
+
+			listaInscripciones = DtoAssembler.toInscripcionDtoList(rs);
+
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		} finally {
+			rs.close();
+			pst.close();
+			c.close();
+		}
+
+		return listaInscripciones;
+	}
+	
+	public List<InscripcionDto> getInscripcionesPorTiempoYSexo(int carreraId, String sexo) throws SQLException {
+		List<InscripcionDto> listaInscripciones = new ArrayList<InscripcionDto>();
+
+		// Conexión a la base de datos
+		Connection c = null;
+		PreparedStatement pst = null;
+		ResultSet rs = null;
+		try {
+			c = BaseDatos.getConnection();
+			pst = c.prepareStatement(sql_InscripcionesPorTiempoYSexo);
+			pst.setString(1, sexo);
+			rs = pst.executeQuery();
+
+			listaInscripciones = DtoAssembler.toInscripcionDtoList(rs);
+
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		} finally {
+			if (rs != null)
+				rs.close();
+			pst.close();
+			c.close();
+		}
+
+		return listaInscripciones;
+	}
+
 	
 }

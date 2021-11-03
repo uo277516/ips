@@ -18,6 +18,9 @@ public class CompeticionModel
 	public static String sqlActualizarPlazas = "update competicion set num_plazas = num_plazas-1 where id =?";
 
 	
+	private AtletaModel am = new AtletaModel();
+	private InscripcionModel im = new InscripcionModel();
+	
 	public List<CompeticionDto> getCompeticiones() throws SQLException
 	{
 		return getAllCompeticiones();
@@ -196,4 +199,20 @@ public class CompeticionModel
         }
 
     }
+    
+    public List<String> getClasificacion(int carreraId) throws SQLException {
+		List<String> clasificacion = new ArrayList<String>();
+		AtletaDto a;
+		List<InscripcionDto> inscripciones = im.getInscripcionesPorTiempo(carreraId);
+		System.out.println("----- Clasificacion general -----");
+		for (InscripcionDto i : inscripciones) {
+			a = am.findAtletaByDni(i.getDni_a());
+			if (i.getHoras() == 0 && i.getMinutos() == 0)
+				clasificacion.add("Nombre: " + a.getNombre() + " - Sexo: " + a.getSexo() + " - Tiempo: --- ");
+			else
+				clasificacion.add("Nombre: " + a.getNombre() + " - Sexo: " + a.getSexo() + " - Tiempo: " + i.getHoras()
+						+ "h " + i.getMinutos() + " minutos");
+		}
+		return clasificacion;
+	}
 }

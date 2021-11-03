@@ -26,6 +26,8 @@ public class AtletaModel
 			+ " from atleta as a, inscripcion as i"
 			+ " where a.dni = i.dni_a"
 			+ " and i.id_c = ?";
+	public static String sqlFindByDni = "select * from atleta where dni=?";
+	public static String sqlFindByEmail = "select * from atleta where email=?";
 	
 	public List<AtletaDto> getAtletas() throws SQLException
 	{
@@ -205,6 +207,33 @@ public class AtletaModel
 		return years;
 	}
 
+	
+	public AtletaDto findAtletaByDni(String dni) throws SQLException {
+		AtletaDto a;
+
+		// Conexión a la base de datos
+		Connection c = null;
+		PreparedStatement pst = null;
+		ResultSet rs = null;
+		try {
+			c = BaseDatos.getConnection();
+			pst = c.prepareStatement(sqlFindByDni);
+			pst.setString(1, dni);
+			rs = pst.executeQuery();
+			
+			rs.next();
+			a = DtoAssembler.toAtletaDto(rs);
+
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		} finally {
+			rs.close();
+			pst.close();
+			c.close();
+		}
+		return a;
+	}
+	
 	private int yearsAtletaByEmail(String email) throws SQLException {
 		int years = 0;
 		Connection c = null;
